@@ -5,3 +5,5 @@
 !pubspec.lock
 !README.md
 !.gitignore
+!assets
+!assets/**
