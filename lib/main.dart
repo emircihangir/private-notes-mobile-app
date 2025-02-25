@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import './disclaimer.dart';
 
 void main() {
   runApp(const PrivateNotesApp());
@@ -16,7 +17,7 @@ class PrivateNotesApp extends StatelessWidget {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(8.00),
-            child: welcomeView(),
+            child: welcomeView(context),
           ),
         ),
       ),
@@ -24,45 +25,55 @@ class PrivateNotesApp extends StatelessWidget {
   }
 }
 
-Widget welcomeView() {
+Widget welcomeView(BuildContext context) {
   var pageController = PageController(initialPage: 0);
+
+  Widget slide1() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image(
+          image: AssetImage("assets/private-notes-icon.png"),
+          width: 150,
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Text(
+          "Welcome to Private Notes.",
+          style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
+        ),
+        CupertinoButton(
+          child: Text(
+            "Let's get started ",
+            style: CupertinoTheme.of(context).textTheme.actionSmallTextStyle,
+          ),
+          onPressed: () {
+            pageController.nextPage(duration: Durations.long1, curve: Curves.ease);
+          },
+        )
+      ],
+    );
+  }
+
+  Widget slide2() {
+    return Column(
+      children: [
+        Text(
+          "Disclaimer",
+          style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
+        ),
+        Text(disclaimerText)
+      ],
+    );
+  }
+
   return PageView(
+    physics: NeverScrollableScrollPhysics(),
     controller: pageController,
     children: [
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image(
-            image: AssetImage("assets/private-notes-icon.png"),
-            width: 200,
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          Text(
-            "Welcome to Private Notes.",
-            style: TextStyle(fontSize: 24),
-          ),
-          CupertinoButton(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("Let's get started "),
-                Icon(CupertinoIcons.arrow_right)
-              ],
-            ),
-            onPressed: () {
-              pageController.nextPage(duration: Durations.long1, curve: Curves.ease);
-            },
-          )
-        ],
-      ),
-      Placeholder(
-        child: Center(
-          child: Text("Slide 2"),
-        ),
-      ),
+      slide1(),
+      slide2(),
       Placeholder(
         child: Center(
           child: Text("Slide 3"),
