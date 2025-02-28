@@ -30,15 +30,11 @@ class PrivateNotesApp extends StatelessWidget {
         )
       ],
       builder: (context, child) => CupertinoApp(
-        theme: CupertinoThemeData(textTheme: CupertinoTextThemeData(textStyle: TextStyle(fontFamily: "SFpro", color: CupertinoColors.black))),
-        home: CupertinoPageScaffold(
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: welcomeView(context),
-            ),
-          ),
-        ),
+        routes: {
+          "/": (BuildContext context) => notesPage(context)
+        },
+        navigatorKey: navigatorKey,
+        theme: CupertinoThemeData(textTheme: CupertinoTextThemeData(textStyle: TextStyle(fontFamily: "SFpro", color: CupertinoColors.black)), brightness: Brightness.light),
       ),
     );
   }
