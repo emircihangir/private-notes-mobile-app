@@ -245,7 +245,26 @@ Widget notePage(BuildContext context) {
             color: CupertinoColors.destructiveRed,
             size: 24,
           ),
-          onPressed: () {}),
+          onPressed: () {
+            showCupertinoDialog(
+              context: navigatorKey.currentContext!,
+              builder: (context) => CupertinoAlertDialog(
+                title: const Text("Are you sure?"),
+                content: const Text("This action is irreversible."),
+                actions: [
+                  CupertinoDialogAction(
+                    child: const Text("Cancel"),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  CupertinoDialogAction(
+                    isDestructiveAction: true,
+                    onPressed: () {},
+                    child: const Text("Delete"),
+                  ),
+                ],
+              ),
+            );
+          }),
     ),
     child: SafeArea(
       child: Column(
