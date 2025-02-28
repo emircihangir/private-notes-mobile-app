@@ -35,9 +35,9 @@ class PrivateNotesApp extends StatelessWidget {
       ],
       builder: (context, child) => CupertinoApp(
         routes: {
-          "/": (BuildContext context) => welcomeView(context),
+          "/": (BuildContext context) => notesPage(context),
           "/loginPage": (BuildContext context) => loginPage(context),
-          "/notesPage": (BuildContext context) => notesPage(context)
+          "/notesPage": (BuildContext context) => notesPage(context),
         },
         navigatorKey: navigatorKey,
         theme: CupertinoThemeData(textTheme: CupertinoTextThemeData(textStyle: TextStyle(fontFamily: "SFpro", color: CupertinoColors.black)), brightness: Brightness.light),
@@ -230,19 +230,48 @@ Widget notesPage(BuildContext context) {
             );
           }),
       middle: Text("Notes"),
-      trailing: CupertinoButton(
-          sizeStyle: CupertinoButtonSize.small,
-          child: Icon(
-            CupertinoIcons.text_badge_plus,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.of(context).push(CupertinoPageRoute(
-              builder: (context) => notePage(context),
-            ));
-          }),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CupertinoButton(
+              sizeStyle: CupertinoButtonSize.small,
+              child: Icon(
+                CupertinoIcons.text_badge_plus,
+                size: 24,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(CupertinoPageRoute(
+                  builder: (context) => notePage(context),
+                ));
+              }),
+          CupertinoButton(
+              sizeStyle: CupertinoButtonSize.small,
+              child: Icon(
+                CupertinoIcons.ellipsis_circle,
+                size: 24,
+              ),
+              onPressed: () {
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) => settingsModal(),
+                );
+              }),
+        ],
+      ),
     ),
-    child: SafeArea(child: noNotesView(context)),
+    child: SafeArea(child: dummyNotesView(context)),
+  );
+}
+
+Widget settingsModal() {
+  return CupertinoActionSheet(
+    actions: [
+      CupertinoActionSheetAction(onPressed: () {}, child: Text("Export Notes")),
+      CupertinoActionSheetAction(onPressed: () {}, child: Text("Import Notes")),
+      CupertinoActionSheetAction(onPressed: () {}, child: Text("Change the Password")),
+      CupertinoActionSheetAction(onPressed: () {}, child: Text("Turn Off Auto-Export")),
+      CupertinoActionSheetAction(onPressed: () {}, child: Text("Info")),
+    ],
   );
 }
 
