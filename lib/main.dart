@@ -440,6 +440,7 @@ Widget loginPage(BuildContext context) {
                 placeholder: "Password",
                 focusNode: piFocusNode,
                 controller: piController,
+                obscureText: true,
               ),
             ),
             CupertinoButton(
@@ -461,7 +462,7 @@ Widget loginPage(BuildContext context) {
                     );
                     return;
                   }
-
+                  piController.text = "";
                   piFocusNode.unfocus();
 
                   //TODO: check if the password is correct before navigating
