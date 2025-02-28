@@ -178,7 +178,10 @@ Widget welcomeView(BuildContext context) {
               mpiFocusNode.unfocus();
 
               //TODO: Create the password before navigating.
-              Navigator.of(context).pushNamed("/notesPage");
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                "/notesPage",
+                (Route<dynamic> route) => false,
+              );
             })
       ],
     );
