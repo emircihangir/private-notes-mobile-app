@@ -13,6 +13,8 @@ class DisclaimerCBModel extends ChangeNotifier {
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: CupertinoColors.systemBackground, systemNavigationBarIconBrightness: Brightness.dark));
   runApp(const PrivateNotesApp());
 }
 
