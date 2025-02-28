@@ -223,6 +223,53 @@ Widget notesPage(BuildContext context) {
   );
 }
 
+Widget notePage(BuildContext context) {
+  return CupertinoPageScaffold(
+    navigationBar: CupertinoNavigationBar(
+      leading: CupertinoButton(
+          sizeStyle: CupertinoButtonSize.small,
+          child: Icon(
+            CupertinoIcons.back,
+            size: 24,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          }),
+      middle: Text("Note"),
+      trailing: CupertinoButton(
+          sizeStyle: CupertinoButtonSize.small,
+          child: Icon(
+            CupertinoIcons.delete,
+            color: CupertinoColors.destructiveRed,
+            size: 24,
+          ),
+          onPressed: () {}),
+    ),
+    child: SafeArea(
+      child: Column(
+        children: [
+          CupertinoListTile(
+            title: CupertinoTextField.borderless(
+              style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
+              placeholder: "Note Title",
+            ),
+          ),
+          Expanded(
+            child: CupertinoListTile(
+              title: Expanded(
+                child: CupertinoTextField.borderless(
+                  textAlignVertical: TextAlignVertical.top,
+                  placeholder: "Note Content",
+                  maxLines: null,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
 Widget noNotesView(BuildContext context) {
   return Center(
