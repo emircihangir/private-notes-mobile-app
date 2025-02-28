@@ -35,7 +35,9 @@ class PrivateNotesApp extends StatelessWidget {
       ],
       builder: (context, child) => CupertinoApp(
         routes: {
-          "/": (BuildContext context) => loginPage(context)
+          "/": (BuildContext context) => welcomeView(context),
+          "/loginPage": (BuildContext context) => loginPage(context),
+          "/notesPage": (BuildContext context) => notesPage(context)
         },
         navigatorKey: navigatorKey,
         theme: CupertinoThemeData(textTheme: CupertinoTextThemeData(textStyle: TextStyle(fontFamily: "SFpro", color: CupertinoColors.black)), brightness: Brightness.light),
@@ -172,7 +174,11 @@ Widget welcomeView(BuildContext context) {
                 );
                 return;
               }
+              mpiController.text = "";
               mpiFocusNode.unfocus();
+
+              //TODO: Create the password efore navigating.
+              Navigator.of(context).pushNamed("/notesPage");
             })
       ],
     );
@@ -202,11 +208,20 @@ Widget notesPage(BuildContext context) {
       leading: CupertinoButton(
           sizeStyle: CupertinoButtonSize.small,
           child: Icon(
-            CupertinoIcons.escape,
+            CupertinoIcons.lock,
             size: 24,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            //TODO: Encrypt the notes before leaving.
+            Navigator.of(context).push(PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return loginPage(context);
+              },
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                var fadeAnimation = Tween(begin: 0.0, end: 1.0).animate(animation);
+                return FadeTransition(opacity: fadeAnimation, child: child);
+              },
+            ));
           }),
       middle: Text("Notes"),
       trailing: CupertinoButton(
@@ -221,7 +236,7 @@ Widget notesPage(BuildContext context) {
             ));
           }),
     ),
-    child: SafeArea(child: dummyNotesView(context)),
+    child: SafeArea(child: noNotesView(context)),
   );
 }
 
