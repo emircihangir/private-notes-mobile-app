@@ -113,17 +113,139 @@ Widget welcomeView(BuildContext context) {
     );
   }
 
-  return PageView(
-    physics: NeverScrollableScrollPhysics(),
-    controller: pageController,
-    children: [
-      slide1(),
-      slide2(),
-      Placeholder(
-        child: Center(
-          child: Text("Slide 3"),
+
+Widget notesPage(BuildContext context) {
+  return CupertinoPageScaffold(
+    navigationBar: CupertinoNavigationBar(
+      leading: CupertinoButton(
+          sizeStyle: CupertinoButtonSize.small,
+          child: Icon(
+            CupertinoIcons.escape,
+            size: 24,
+          ),
+          onPressed: () {}),
+      middle: Text("Notes"),
+      trailing: CupertinoButton(
+          sizeStyle: CupertinoButtonSize.small,
+          child: Icon(
+            CupertinoIcons.text_badge_plus,
+            size: 24,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(CupertinoPageRoute(
+              builder: (context) => notePage(context),
+            ));
+          }),
+    ),
+    child: SafeArea(child: dummyNotesView(context)),
+  );
+}
+
+
+Widget noNotesView(BuildContext context) {
+  return Center(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("No notes. Tap "),
+        Icon(
+          CupertinoIcons.text_badge_plus,
+          size: 24,
+          color: CupertinoColors.systemGrey,
         ),
-      ),
-    ],
+        Text(" to create a new one.")
+      ],
+    ),
+  );
+}
+
+//TODO: delete this before production.
+Widget dummyNotesView(BuildContext context) {
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        CupertinoListTile(title: CupertinoSearchTextField()),
+        CupertinoListSection(
+          topMargin: 0,
+          hasLeading: false,
+          backgroundColor: CupertinoColors.systemBackground,
+          children: [
+            CupertinoListTile(
+              title: Text("note 1"),
+              subtitle: Text("note 1 subtitle"),
+              onTap: () {},
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+            CupertinoListTile(
+              title: Text("note 2"),
+              subtitle: Text("note 2 subtitle"),
+            ),
+          ],
+        ),
+      ],
+    ),
   );
 }
