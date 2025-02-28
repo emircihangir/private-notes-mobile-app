@@ -45,14 +45,14 @@ class PrivateNotesApp extends StatelessWidget {
 }
 
 Widget welcomeView(BuildContext context) {
-  var pageController = PageController(initialPage: 2);
+  var pageController = PageController(initialPage: 0);
 
   Widget slide1() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image(
-          image: AssetImage("assets/private-notes-icon.png"),
+        SvgPicture.asset(
+          "assets/private-notes-icon.svg",
           width: 150,
         ),
         const SizedBox(
@@ -75,6 +75,7 @@ Widget welcomeView(BuildContext context) {
 
   Widget slide2() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           "Disclaimer",
@@ -113,6 +114,87 @@ Widget welcomeView(BuildContext context) {
     );
   }
 
+  Widget slide3() {
+    var mpiController = TextEditingController(); // mpi = master password input
+    var mpiFocusNode = FocusNode();
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(
+          "assets/key.svg",
+          width: 70,
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Text(
+          "Master Password",
+          style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          width: 250,
+          child: Text(
+            "Create the master password to be used for encryption / decryption. Make sure it's strong and hard to predict. Saving this password anywhere is not recommended.",
+            textAlign: TextAlign.justify,
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          width: 250,
+          child: CupertinoTextField(
+            placeholder: "Master Password",
+            focusNode: mpiFocusNode,
+            controller: mpiController,
+          ),
+        ),
+        CupertinoButton(
+            child: Text("Create"),
+            onPressed: () {
+              if (mpiController.text.isEmpty) {
+                showCupertinoDialog(
+                  context: navigatorKey.currentContext!,
+                  builder: (context) => CupertinoAlertDialog(
+                    title: const Text("Enter a password"),
+                    actions: [
+                      CupertinoDialogAction(
+                        isDefaultAction: true,
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("OK"),
+                      )
+                    ],
+                  ),
+                );
+                return;
+              }
+              mpiFocusNode.unfocus();
+            })
+      ],
+    );
+  }
+
+  return CupertinoPageScaffold(
+    child: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: PageView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: pageController,
+          children: [
+            slide1(),
+            slide2(),
+            slide3()
+          ],
+        ),
+      ),
+    ),
+  );
+}
 
 Widget notesPage(BuildContext context) {
   return CupertinoPageScaffold(
