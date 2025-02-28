@@ -177,7 +177,7 @@ Widget welcomeView(BuildContext context) {
               mpiController.text = "";
               mpiFocusNode.unfocus();
 
-              //TODO: Create the password efore navigating.
+              //TODO: Create the password before navigating.
               Navigator.of(context).pushNamed("/notesPage");
             })
       ],
@@ -213,15 +213,18 @@ Widget notesPage(BuildContext context) {
           ),
           onPressed: () {
             //TODO: Encrypt the notes before leaving.
-            Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return loginPage(context);
-              },
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                var fadeAnimation = Tween(begin: 0.0, end: 1.0).animate(animation);
-                return FadeTransition(opacity: fadeAnimation, child: child);
-              },
-            ));
+            Navigator.of(context).pushAndRemoveUntil(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return loginPage(context);
+                },
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  var fadeAnimation = Tween(begin: 0.0, end: 1.0).animate(animation);
+                  return FadeTransition(opacity: fadeAnimation, child: child);
+                },
+              ),
+              (Route<dynamic> route) => false,
+            );
           }),
       middle: Text("Notes"),
       trailing: CupertinoButton(
