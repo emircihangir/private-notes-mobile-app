@@ -6,7 +6,7 @@ import 'package:privatenotes/main.dart';
 import 'package:provider/provider.dart';
 
 Widget welcomeView(BuildContext context) {
-  var pageController = PageController(initialPage: 0);
+  var pageController = PageController(initialPage: 2);
 
   Widget slide1() {
     return Column(
@@ -76,8 +76,10 @@ Widget welcomeView(BuildContext context) {
   }
 
   Widget slide3() {
-    var mpiController = TextEditingController(); // mpi = master password input
-    var mpiFocusNode = FocusNode();
+    var piController = TextEditingController(); // pi = password input
+    var piFocusNode = FocusNode();
+    var piController2 = TextEditingController();
+    var piFocusNode2 = FocusNode();
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +92,7 @@ Widget welcomeView(BuildContext context) {
           height: 30,
         ),
         Text(
-          "Master Password",
+          "Password",
           style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
         ),
         const SizedBox(
@@ -99,7 +101,7 @@ Widget welcomeView(BuildContext context) {
         SizedBox(
           width: 250,
           child: Text(
-            "Create the master password to be used for encryption / decryption. Make sure it's strong and hard to predict. Saving this password anywhere is not recommended.",
+            "Create the password to lock your notes. Make sure it's strong and hard to predict. Saving this password anywhere is not recommended.",
             textAlign: TextAlign.justify,
           ),
         ),
@@ -109,15 +111,29 @@ Widget welcomeView(BuildContext context) {
         SizedBox(
           width: 250,
           child: CupertinoTextField(
-            placeholder: "Master Password",
-            focusNode: mpiFocusNode,
-            controller: mpiController,
+            placeholder: "Password",
+            focusNode: piFocusNode,
+            controller: piController,
+            obscureText: true,
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          width: 250,
+          child: CupertinoTextField(
+            placeholder: "Confirm Password",
+            focusNode: piFocusNode2,
+            controller: piController2,
+            obscureText: true,
           ),
         ),
         CupertinoButton(
             child: Text("Create"),
             onPressed: () {
-              if (mpiController.text.isEmpty) {
+              //TODO: check if the password inputs match
+              if (piController.text.isEmpty || piController2.text.isEmpty) {
                 showCupertinoDialog(
                   context: navigatorKey.currentContext!,
                   builder: (context) => CupertinoAlertDialog(
@@ -132,9 +148,26 @@ Widget welcomeView(BuildContext context) {
                   ),
                 );
                 return;
+              } else if (piController.text != piController2.text) {
+                showCupertinoDialog(
+                  context: navigatorKey.currentContext!,
+                  builder: (context) => CupertinoAlertDialog(
+                    title: const Text("Passwords do not match"),
+                    actions: [
+                      CupertinoDialogAction(
+                        isDefaultAction: true,
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("OK"),
+                      )
+                    ],
+                  ),
+                );
+                return;
               }
-              mpiController.text = "";
-              mpiFocusNode.unfocus();
+              piController.text = "";
+              piFocusNode.unfocus();
+              piController2.text = "";
+              piFocusNode2.unfocus();
 
               //TODO: Create the password before navigating.
               Navigator.of(context).pushNamedAndRemoveUntil(
