@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:privatenotes/Pages/login_page.dart';
 import 'package:privatenotes/Pages/note_page.dart';
 import 'package:privatenotes/Pages/notes_page.dart';
+import 'package:privatenotes/Views/welcome_view.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -19,7 +20,13 @@ class DisclaimerCBModel extends ChangeNotifier {
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: CupertinoColors.systemBackground, systemNavigationBarIconBrightness: Brightness.dark));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarColor: CupertinoColors.systemBackground,
+    systemNavigationBarIconBrightness: Brightness.dark,
+  ));
   runApp(const PrivateNotesApp());
 }
 
@@ -36,7 +43,7 @@ class PrivateNotesApp extends StatelessWidget {
       ],
       builder: (context, child) => CupertinoApp(
         routes: {
-          "/": (BuildContext context) => notesPage(context),
+          "/": (BuildContext context) => welcomeView(context),
           "/loginPage": (BuildContext context) => loginPage(context),
           "/notesPage": (BuildContext context) => notesPage(context),
         },
