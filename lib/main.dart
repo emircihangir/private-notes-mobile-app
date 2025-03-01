@@ -214,21 +214,6 @@ void createNewNote(BuildContext context) {
   ));
 }
 
-Widget noNotesView(BuildContext context) {
-  return Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("No notes. Tap below to create a new one."),
-        CupertinoButton(
-          child: Text("New Note"),
-          onPressed: () => createNewNote(context),
-        )
-      ],
-    ),
-  );
-}
-
 //TODO: delete this before production.
 Widget dummyNotesView(BuildContext context) {
   return SingleChildScrollView(

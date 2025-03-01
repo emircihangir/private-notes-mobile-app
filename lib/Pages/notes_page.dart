@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:privatenotes/Pages/login_page.dart';
+import 'package:privatenotes/Views/no_notes_view.dart';
 import 'package:privatenotes/Views/settings_modal.dart';
 import 'package:privatenotes/main.dart';
 
