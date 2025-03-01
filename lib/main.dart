@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+Uint8List? digestBytes;
+
 class DisclaimerCBModel extends ChangeNotifier {
   bool? _value = false;
   bool? get value => _value;

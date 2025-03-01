@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -132,7 +136,7 @@ Widget welcomeView(BuildContext context) {
         CupertinoButton(
             child: Text("Create"),
             onPressed: () {
-              //TODO: check if the password inputs match
+              //UI checks
               if (piController.text.isEmpty || piController2.text.isEmpty) {
                 showCupertinoDialog(
                   context: navigatorKey.currentContext!,
@@ -164,12 +168,16 @@ Widget welcomeView(BuildContext context) {
                 );
                 return;
               }
+
+              // create the password
+              digestBytes = Uint8List.fromList(sha256.convert(utf8.encode(piController.text)).bytes);
+
+              // clear the textfields
               piController.text = "";
               piFocusNode.unfocus();
               piController2.text = "";
               piFocusNode2.unfocus();
 
-              //TODO: Create the password before navigating.
               Navigator.of(context).pushNamedAndRemoveUntil(
                 "/notesPage",
                 (Route<dynamic> route) => false,
