@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:privatenotes/Pages/NotesPage.dart';
+import 'package:privatenotes/Pages/notes_page.dart';
 import 'package:privatenotes/main.dart';
 
 Widget loginPage(BuildContext context) {

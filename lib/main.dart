@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:privatenotes/Pages/LoginPage.dart';
-import 'package:privatenotes/Pages/NotePage.dart';
-import 'package:privatenotes/Pages/NotesPage.dart';
+import 'package:privatenotes/Pages/login_page.dart';
+import 'package:privatenotes/Pages/note_page.dart';
+import 'package:privatenotes/Pages/notes_page.dart';
 import './disclaimer.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
