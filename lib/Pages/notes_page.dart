@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:privatenotes/Pages/login_page.dart';
+import 'package:privatenotes/Pages/note_page.dart';
 import 'package:privatenotes/Views/no_notes_view.dart';
 import 'package:privatenotes/Views/settings_modal.dart';
-import 'package:privatenotes/main.dart';
 
 Widget notesPage(BuildContext context) {
   return CupertinoPageScaffold(
@@ -38,7 +38,11 @@ Widget notesPage(BuildContext context) {
                 CupertinoIcons.text_badge_plus,
                 size: 24,
               ),
-              onPressed: () => createNewNote(context)),
+              onPressed: () {
+                Navigator.of(context).push(CupertinoPageRoute(
+                  builder: (context) => notePage(context),
+                ));
+              }),
           CupertinoButton(
               sizeStyle: CupertinoButtonSize.small,
               child: Icon(

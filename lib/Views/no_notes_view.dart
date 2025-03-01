@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:privatenotes/main.dart';
+import 'package:privatenotes/Pages/note_page.dart';
 
 Widget noNotesView(BuildContext context) {
   return Center(
@@ -9,7 +9,11 @@ Widget noNotesView(BuildContext context) {
         Text("No notes. Tap below to create a new one."),
         CupertinoButton(
           child: Text("New Note"),
-          onPressed: () => createNewNote(context),
+          onPressed: () {
+            Navigator.of(context).push(CupertinoPageRoute(
+              builder: (context) => notePage(context),
+            ));
+          },
         )
       ],
     ),

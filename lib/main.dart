@@ -55,9 +55,3 @@ class PrivateNotesApp extends StatelessWidget {
     );
   }
 }
-
-void createNewNote(BuildContext context) {
-  Navigator.of(context).push(CupertinoPageRoute(
-    builder: (context) => notePage(context),
-  ));
-}

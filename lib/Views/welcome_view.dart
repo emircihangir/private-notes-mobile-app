@@ -10,7 +10,7 @@ import 'package:privatenotes/main.dart';
 import 'package:provider/provider.dart';
 
 Widget welcomeView(BuildContext context) {
-  var pageController = PageController(initialPage: 2);
+  var pageController = PageController(initialPage: 0);
 
   Widget slide1() {
     return Column(
