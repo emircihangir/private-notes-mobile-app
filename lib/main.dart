@@ -1,19 +1,30 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:privatenotes/Pages/login_page.dart';
+import 'package:privatenotes/Pages/note_page.dart';
 import 'package:privatenotes/Pages/notes_page.dart';
 import 'package:privatenotes/Views/welcome_view.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-Uint8List? digestBytes;
-File? cookiesFile;
-File? notesFile;
+File cookiesFile = File("");
+File notesFile = File("");
+bool firstTimeUser = true;
+Map<String, dynamic> cookiesData = {};
 
-class DisclaimerCBModel extends ChangeNotifier {
+void secureErase(Uint8List d) {
+  for (var i = 0; i < 32; i++) {
+    d[i] = 0;
+  }
+}
+
+//** Disclaimer checkbox value model */
+class DisclaimerCBVModel extends ChangeNotifier {
   bool? _value = false;
   bool? get value => _value;
   set value(bool? value) {
@@ -32,6 +43,19 @@ void main() async {
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
 
+  // determine if it's a first-time user and initialize the global variables.
+  final directory = await getApplicationDocumentsDirectory();
+  final notesFilePath = "${directory.path}/notes";
+  final cookiesFilePath = "${directory.path}/cookies";
+  notesFile = File(notesFilePath);
+  cookiesFile = File(cookiesFilePath);
+  bool cookiesFileExists = await cookiesFile.exists();
+  if (cookiesFileExists) {
+    firstTimeUser = false;
+    final cookiesFileContent = await cookiesFile.readAsString();
+    cookiesData = json.decode(cookiesFileContent);
+  }
+
   runApp(const PrivateNotesApp());
 }
 
@@ -43,12 +67,21 @@ class PrivateNotesApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => DisclaimerCBModel(),
+          create: (context) => DisclaimerCBVModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => EyeValueModel(),
         )
       ],
       builder: (context, child) => CupertinoApp(
         routes: {
-          "/": (BuildContext context) => welcomeView(context),
+          "/": (BuildContext context) {
+            if (firstTimeUser) {
+              return welcomeView(context);
+            } else {
+              return notesPage(context);
+            }
+          },
           "/loginPage": (BuildContext context) => loginPage(context),
           "/notesPage": (BuildContext context) => notesPage(context),
         },
