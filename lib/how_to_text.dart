@@ -1,0 +1,1 @@
+const howToText = "Some how to text Some how to text Some how to text Some how to text Some how to text Some how to text Some how to text Some how to text Some how to text Some how to text Some how to text Some how to text ";
