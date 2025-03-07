@@ -45,7 +45,7 @@ Widget notePage(BuildContext context, {bool newNote = false}) {
     await notesFile.writeAsString(json.encode(notesFileData));
     await cookiesFile.writeAsString(json.encode(cookiesFileData));
 
-    // debugger();
+    if (context.mounted) Provider.of<NoteTitlesModel>(context, listen: false).add(titleTFcontroller.text);
   }
 
   return CupertinoPageScaffold(
