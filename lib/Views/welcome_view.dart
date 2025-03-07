@@ -1,13 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:privatenotes/disclaimer.dart';
+import 'package:privatenotes/how_to_text.dart';
 import 'package:privatenotes/main.dart';
 import 'package:provider/provider.dart';
 
@@ -58,10 +57,10 @@ Widget welcomeView(BuildContext context) {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Consumer<DisclaimerCBModel>(
+            Consumer<DisclaimerCBVModel>(
               builder: (context, cbValue, child) => CupertinoCheckbox(
                 value: cbValue.value,
-                onChanged: (value) => Provider.of<DisclaimerCBModel>(context, listen: false).value = value,
+                onChanged: (value) => Provider.of<DisclaimerCBVModel>(context, listen: false).value = value,
                 semanticLabel: "I have read and understand the terms.",
               ),
             ),
@@ -70,8 +69,9 @@ Widget welcomeView(BuildContext context) {
             )
           ],
         ),
-        Consumer<DisclaimerCBModel>(
+        Consumer<DisclaimerCBVModel>(
           builder: (context, value, child) => CupertinoButton(
+            // pageController.nextPage(duration: Durations.long1, curve: Curves.ease)
             onPressed: value.value == true ? () => pageController.nextPage(duration: Durations.long1, curve: Curves.ease) : null,
             sizeStyle: CupertinoButtonSize.small,
             child: const Text("Continue"),
@@ -82,135 +82,37 @@ Widget welcomeView(BuildContext context) {
   }
 
   Widget slide3() {
-    var piController = TextEditingController(); // pi = password input
-    var piFocusNode = FocusNode();
-    var piController2 = TextEditingController();
-    var piFocusNode2 = FocusNode();
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SvgPicture.asset(
-          "assets/key.svg",
-          width: 70,
-        ),
-        const SizedBox(
-          height: 30,
-        ),
         Text(
-          "Password",
+          "How to use the app",
           style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
         ),
-        const SizedBox(
+        SizedBox(
           height: 10,
         ),
-        SizedBox(
-          width: 250,
-          child: Text(
-            "Create the password to lock your notes. Make sure it's strong and hard to predict. Saving this password anywhere is not recommended.",
-            textAlign: TextAlign.justify,
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        SizedBox(
-          width: 250,
-          child: CupertinoTextField(
-            placeholder: "Password",
-            focusNode: piFocusNode,
-            controller: piController,
-            obscureText: true,
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        SizedBox(
-          width: 250,
-          child: CupertinoTextField(
-            placeholder: "Confirm Password",
-            focusNode: piFocusNode2,
-            controller: piController2,
-            obscureText: true,
-          ),
+        Text(
+          howToText,
+          textAlign: TextAlign.justify,
         ),
         CupertinoButton(
-            child: Text("Create"),
+            child: Text("Proceed"),
             onPressed: () async {
-              //UI checks
-              if (piController.text.isEmpty || piController2.text.isEmpty) {
-                showCupertinoDialog(
-                  context: navigatorKey.currentContext!,
-                  builder: (context) => CupertinoAlertDialog(
-                    title: const Text("Enter a password"),
-                    actions: [
-                      CupertinoDialogAction(
-                        isDefaultAction: true,
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("OK"),
-                      )
-                    ],
-                  ),
-                );
-                return;
-              } else if (piController.text != piController2.text) {
-                showCupertinoDialog(
-                  context: navigatorKey.currentContext!,
-                  builder: (context) => CupertinoAlertDialog(
-                    title: const Text("Passwords do not match"),
-                    actions: [
-                      CupertinoDialogAction(
-                        isDefaultAction: true,
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("OK"),
-                      )
-                    ],
-                  ),
-                );
-                return;
-              }
+              // create the notes file
+              Map<String, dynamic> notesFileData = {
+                "noteTitles": {},
+                "noteContents": {}
+              };
 
-              // create the password
-              digestBytes = Uint8List.fromList(sha256.convert(utf8.encode(piController.text)).bytes);
+              Map<String, dynamic> cfd = {
+                "totalNotes": 0
+              };
 
-              // create the necessary files if they do not exists.
-              final directory = await getApplicationDocumentsDirectory();
-              final notesFilePath = "${directory.path}/notes";
-              final cookiesFilePath = "${directory.path}/cookies";
-              notesFile = File(notesFilePath);
-              cookiesFile = File(cookiesFilePath);
+              await notesFile.writeAsString(json.encode(notesFileData));
+              await cookiesFile.writeAsString(json.encode(cfd));
 
-              if (await notesFile!.exists() == false) {
-                // create the notes file.
-                Map<String, dynamic> notesFileData = {
-                  "notes": {}
-                };
-                final notesFileDataJSON = json.encode(notesFileData);
-                final nfdjEncrypted = encrypt.Encrypter(encrypt.AES(encrypt.Key(digestBytes!))).encrypt(notesFileDataJSON, iv: encrypt.IV.allZerosOfLength(16));
-                await notesFile!.writeAsString(nfdjEncrypted.base64);
-                print("notes.json successfully created.");
-              }
-              if (await cookiesFile!.exists() == false) {
-                // create the cookies file.
-                Map<String, dynamic> cookiesFileData = {
-                  "totalNotes": 0
-                };
-                final cookiesFileDataJSON = json.encode(cookiesFileData);
-                await cookiesFile!.writeAsString(cookiesFileDataJSON);
-                print("cookies.json successfully created.");
-              }
-
-              // clear the textfields
-              piController.text = "";
-              piFocusNode.unfocus();
-              piController2.text = "";
-              piFocusNode2.unfocus();
-
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                "/notesPage",
-                (Route<dynamic> route) => false,
-              );
+              if (context.mounted) Navigator.of(context).pushNamed("/notesPage");
             })
       ],
     );
