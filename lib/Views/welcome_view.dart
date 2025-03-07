@@ -55,11 +55,13 @@ Widget welcomeView(BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Consumer<DisclaimerCBVModel>(
-              builder: (context, cbValue, child) => CupertinoCheckbox(
-                value: cbValue.value,
-                onChanged: (value) => Provider.of<DisclaimerCBVModel>(context, listen: false).value = value,
-                semanticLabel: "I have read and understand the terms.",
-              ),
+              builder: (context, cbValue, child) {
+                return CupertinoCheckbox(
+                  value: cbValue.value,
+                  onChanged: (value) => Provider.of<DisclaimerCBVModel>(context, listen: false).value = value,
+                  semanticLabel: "I have read and understand the terms.",
+                );
+              },
             ),
             Text(
               "I have read and understand the terms.",
@@ -67,12 +69,14 @@ Widget welcomeView(BuildContext context) {
           ],
         ),
         Consumer<DisclaimerCBVModel>(
-          builder: (context, value, child) => CupertinoButton(
-            // pageController.nextPage(duration: Durations.long1, curve: Curves.ease)
-            onPressed: value.value == true ? () => pageController.nextPage(duration: Durations.long1, curve: Curves.ease) : null,
-            sizeStyle: CupertinoButtonSize.small,
-            child: const Text("Continue"),
-          ),
+          builder: (context, value, child) {
+            return CupertinoButton(
+              // pageController.nextPage(duration: Durations.long1, curve: Curves.ease)
+              onPressed: value.value == true ? () => pageController.nextPage(duration: Durations.long1, curve: Curves.ease) : null,
+              sizeStyle: CupertinoButtonSize.small,
+              child: const Text("Continue"),
+            );
+          },
         )
       ],
     );
