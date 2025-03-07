@@ -12,7 +12,9 @@ Widget notesPage(BuildContext context) {
       (key, value) => result.add(CupertinoListTile(
         title: Text(value),
         onTap: () {
-          print(key);
+          Navigator.of(context).push(CupertinoPageRoute(
+            builder: (context) => notePage(context, noteID: key),
+          ));
         },
       )),
     );
@@ -25,12 +27,14 @@ Widget notesPage(BuildContext context) {
         children: [
           CupertinoListTile(title: CupertinoSearchTextField()),
           Consumer<NoteTitlesModel>(
-            builder: (context, value, child) => CupertinoListSection(
-              topMargin: 0,
-              hasLeading: false,
-              backgroundColor: CupertinoColors.systemBackground,
-              children: retrieveNoteWidgets(value.value),
-            ),
+            builder: (context, value, child) {
+              return CupertinoListSection(
+                topMargin: 0,
+                hasLeading: false,
+                backgroundColor: CupertinoColors.systemBackground,
+                children: retrieveNoteWidgets(value.value),
+              );
+            },
           )
         ],
       ),
@@ -47,7 +51,7 @@ Widget notesPage(BuildContext context) {
           ),
           onPressed: () {
             Navigator.of(context).push(CupertinoPageRoute(
-              builder: (context) => notePage(context, newNote: true),
+              builder: (context) => notePage(context),
             ));
           }),
       middle: Text("Notes"),
@@ -65,9 +69,11 @@ Widget notesPage(BuildContext context) {
           }),
     ),
     child: Consumer<NoteTitlesModel>(
-      builder: (context, value, child) => SafeArea(
-        child: value.value.isNotEmpty ? notesView() : noNotesView(context),
-      ),
+      builder: (context, value, child) {
+        return SafeArea(
+          child: value.value.isNotEmpty ? notesView() : noNotesView(context),
+        );
+      },
     ),
   );
 }

@@ -18,7 +18,7 @@ Widget noNotesView(BuildContext context) {
       ),
       onPressed: () {
         Navigator.of(context).push(CupertinoPageRoute(
-          builder: (context) => notePage(context, newNote: true),
+          builder: (context) => notePage(context),
         ));
       },
     ),

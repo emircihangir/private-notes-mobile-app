@@ -89,23 +89,28 @@ class PrivateNotesApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => NoteTitlesModel(initialValue: notesFileData["noteTitles"] ?? {}),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => IsLockedModel(),
         )
       ],
-      builder: (context, child) => CupertinoApp(
-        routes: {
-          "/": (BuildContext context) {
-            if (firstTimeUser) {
-              return welcomeView(context);
-            } else {
-              return notesPage(context);
-            }
+      builder: (context, child) {
+        return CupertinoApp(
+          routes: {
+            "/": (BuildContext context) {
+              if (firstTimeUser) {
+                return welcomeView(context);
+              } else {
+                return notesPage(context);
+              }
+            },
+            "/loginPage": (BuildContext context) => loginPage(context),
+            "/notesPage": (BuildContext context) => notesPage(context),
           },
-          "/loginPage": (BuildContext context) => loginPage(context),
-          "/notesPage": (BuildContext context) => notesPage(context),
-        },
-        navigatorKey: navigatorKey,
-        theme: CupertinoThemeData(textTheme: CupertinoTextThemeData(textStyle: TextStyle(fontFamily: "SFpro", color: CupertinoColors.black)), brightness: Brightness.light),
-      ),
+          navigatorKey: navigatorKey,
+          theme: CupertinoThemeData(textTheme: CupertinoTextThemeData(textStyle: TextStyle(fontFamily: "SFpro", color: CupertinoColors.black)), brightness: Brightness.light),
+        );
+      },
     );
   }
 }
