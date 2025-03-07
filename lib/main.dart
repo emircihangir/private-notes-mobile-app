@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +17,6 @@ File notesFile = File("");
 bool firstTimeUser = true;
 Map<String, dynamic> cookiesFileData = {};
 Map<String, dynamic> notesFileData = {};
-
-void secureErase(Uint8List d) {
-  for (var i = 0; i < 32; i++) {
-    d[i] = 0;
-  }
-}
 
 //** Disclaimer checkbox value model */
 class DisclaimerCBVModel extends ChangeNotifier {

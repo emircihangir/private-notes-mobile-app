@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:privatenotes/Pages/notes_page.dart';
-import 'package:privatenotes/main.dart';
 
 Widget loginPage(BuildContext context) {
   var piController = TextEditingController(); // pi = password input
@@ -46,33 +44,7 @@ Widget loginPage(BuildContext context) {
                 obscureText: true,
               ),
             ),
-            CupertinoButton(
-                child: Text("Unlock"),
-                onPressed: () {
-                  if (piController.text.isEmpty) {
-                    showCupertinoDialog(
-                      context: navigatorKey.currentContext!,
-                      builder: (context) => CupertinoAlertDialog(
-                        title: const Text("Enter a password"),
-                        actions: [
-                          CupertinoDialogAction(
-                            isDefaultAction: true,
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text("OK"),
-                          )
-                        ],
-                      ),
-                    );
-                    return;
-                  }
-                  piController.text = "";
-                  piFocusNode.unfocus();
-
-                  //TODO: check if the password is correct before navigating
-                  Navigator.of(context).push(CupertinoPageRoute(
-                    builder: (context) => notesPage(context),
-                  ));
-                })
+            CupertinoButton(child: Text("Unlock"), onPressed: () {})
           ],
         ),
       ),
