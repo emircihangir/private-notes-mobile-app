@@ -29,22 +29,12 @@ class DisclaimerCBVModel extends ChangeNotifier {
 }
 
 class NoteTitlesModel extends ChangeNotifier {
-  List<dynamic> _value = [];
-
-  NoteTitlesModel({required List initialValue}) : _value = initialValue;
-
-  List<dynamic> get value => _value;
-
-  set value(List<dynamic> list) {
-    _value = list;
+  final Map<String, dynamic> _value;
+  NoteTitlesModel({required Map<String, dynamic> initialValue}) : _value = initialValue;
+  Map<String, dynamic> get value => _value;
+  void updateValue(String key, dynamic newValue) {
+    _value[key] = newValue;
     notifyListeners();
-  }
-
-  void add(dynamic item) {
-    value = [
-      ..._value,
-      item
-    ];
   }
 }
 
@@ -89,8 +79,6 @@ class PrivateNotesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List noteTitles = notesFileData["noteTitles"].values.toList();
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -100,7 +88,7 @@ class PrivateNotesApp extends StatelessWidget {
           create: (context) => EyeValueModel(),
         ),
         ChangeNotifierProvider(
-          create: (context) => NoteTitlesModel(initialValue: noteTitles),
+          create: (context) => NoteTitlesModel(initialValue: notesFileData["noteTitles"] ?? {}),
         )
       ],
       builder: (context, child) => CupertinoApp(

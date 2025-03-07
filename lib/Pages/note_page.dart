@@ -41,7 +41,7 @@ Widget notePage(BuildContext context, {bool newNote = false}) {
     passwordIC.text = "";
     if (Provider.of<EyeValueModel>(context, listen: false).isOpen) Provider.of<EyeValueModel>(context, listen: false).toggle();
 
-    Provider.of<NoteTitlesModel>(context, listen: false).add(titleTFcontroller.text);
+    Provider.of<NoteTitlesModel>(context, listen: false).updateValue(newNoteID, titleTFcontroller.text);
 
     // write to file
     await notesFile.writeAsString(json.encode(notesFileData));

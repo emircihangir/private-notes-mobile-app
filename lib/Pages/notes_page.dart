@@ -6,6 +6,19 @@ import 'package:privatenotes/main.dart';
 import 'package:provider/provider.dart';
 
 Widget notesPage(BuildContext context) {
+  List<Widget> retrieveNoteWidgets(Map<String, dynamic> data) {
+    List<Widget> result = [];
+    data.forEach(
+      (key, value) => result.add(CupertinoListTile(
+        title: Text(value),
+        onTap: () {
+          print(key);
+        },
+      )),
+    );
+    return result;
+  }
+
   Widget notesView() {
     return SingleChildScrollView(
       child: Column(
@@ -16,11 +29,7 @@ Widget notesPage(BuildContext context) {
               topMargin: 0,
               hasLeading: false,
               backgroundColor: CupertinoColors.systemBackground,
-              children: value.value
-                  .map(
-                    (e) => CupertinoListTile(title: Text(e)),
-                  )
-                  .toList(),
+              children: retrieveNoteWidgets(value.value),
             ),
           )
         ],
