@@ -55,6 +55,10 @@ Widget notesPage(BuildContext context) {
             );
           }),
     ),
-    child: SafeArea(child: cookiesFileData["totalNotes"] > 0 ? notesView() : noNotesView(context)),
+    child: Consumer<NoteTitlesModel>(
+      builder: (context, value, child) => SafeArea(
+        child: value.value.isNotEmpty ? notesView() : noNotesView(context),
+      ),
+    ),
   );
 }
