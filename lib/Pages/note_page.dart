@@ -28,7 +28,7 @@ Widget notePage(BuildContext context, {bool newNote = false}) {
   Future<void> createNewNote() async {
     //TODO: securely erase map and IC text variables.
     //TODO: reset the input values after finishing.
-    Map<String, dynamic> notesFileData = json.decode(await notesFile.readAsString());
+
     String newNoteID = "note${cookiesFileData["totalNotes"] + 1}";
     cookiesFileData["totalNotes"] += 1;
 
@@ -39,13 +39,13 @@ Widget notePage(BuildContext context, {bool newNote = false}) {
 
     // reset the input values.
     passwordIC.text = "";
-    if (context.mounted && Provider.of<EyeValueModel>(context, listen: false).isOpen) Provider.of<EyeValueModel>(context, listen: false).toggle();
+    if (Provider.of<EyeValueModel>(context, listen: false).isOpen) Provider.of<EyeValueModel>(context, listen: false).toggle();
+
+    Provider.of<NoteTitlesModel>(context, listen: false).add(titleTFcontroller.text);
 
     // write to file
     await notesFile.writeAsString(json.encode(notesFileData));
     await cookiesFile.writeAsString(json.encode(cookiesFileData));
-
-    if (context.mounted) Provider.of<NoteTitlesModel>(context, listen: false).add(titleTFcontroller.text);
   }
 
   return CupertinoPageScaffold(
