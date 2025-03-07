@@ -30,8 +30,8 @@ Widget notePage(BuildContext context, {bool newNote = false}) {
     //TODO: securely erase map and IC text variables.
     //TODO: reset the input values after finishing.
     Map<String, dynamic> notesFileData = json.decode(await notesFile.readAsString());
-    String newNoteID = "note${cookiesData["totalNotes"] + 1}";
-    cookiesData["totalNotes"] += 1;
+    String newNoteID = "note${cookiesFileData["totalNotes"] + 1}";
+    cookiesFileData["totalNotes"] += 1;
 
     var encryptedContent = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(passwordIC.text)).bytes)))).encrypt(contentTFcontroller.text, iv: encrypt.IV.allZerosOfLength(16)).base64;
 
@@ -44,7 +44,7 @@ Widget notePage(BuildContext context, {bool newNote = false}) {
 
     // write to file
     await notesFile.writeAsString(json.encode(notesFileData));
-    await cookiesFile.writeAsString(json.encode(cookiesData));
+    await cookiesFile.writeAsString(json.encode(cookiesFileData));
 
     // debugger();
   }

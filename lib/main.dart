@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,8 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 File cookiesFile = File("");
 File notesFile = File("");
 bool firstTimeUser = true;
-Map<String, dynamic> cookiesData = {};
+Map<String, dynamic> cookiesFileData = {};
+Map<String, dynamic> notesFileData = {};
 
 void secureErase(Uint8List d) {
   for (var i = 0; i < 32; i++) {
@@ -30,6 +32,26 @@ class DisclaimerCBVModel extends ChangeNotifier {
   set value(bool? value) {
     _value = value;
     notifyListeners();
+  }
+}
+
+class NoteTitlesModel extends ChangeNotifier {
+  List<dynamic> _value = [];
+
+  NoteTitlesModel({required List initialValue}) : _value = initialValue;
+
+  List<dynamic> get value => _value;
+
+  set value(List<dynamic> list) {
+    _value = list;
+    notifyListeners();
+  }
+
+  void add(dynamic item) {
+    value = [
+      ..._value,
+      item
+    ];
   }
 }
 
@@ -53,7 +75,8 @@ void main() async {
   if (cookiesFileExists) {
     firstTimeUser = false;
     final cookiesFileContent = await cookiesFile.readAsString();
-    cookiesData = json.decode(cookiesFileContent);
+    cookiesFileData = json.decode(cookiesFileContent);
+    notesFileData = json.decode(await notesFile.readAsString());
   }
 
   runApp(const PrivateNotesApp());
@@ -64,6 +87,8 @@ class PrivateNotesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List noteTitles = notesFileData["noteTitles"].values.toList();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -71,6 +96,9 @@ class PrivateNotesApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => EyeValueModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => NoteTitlesModel(initialValue: noteTitles),
         )
       ],
       builder: (context, child) => CupertinoApp(
