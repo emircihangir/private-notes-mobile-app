@@ -3,19 +3,24 @@ import 'package:privatenotes/Pages/note_page.dart';
 
 Widget noNotesView(BuildContext context) {
   return Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("No notes. Tap below to create a new one."),
-        CupertinoButton(
-          child: Text("New Note"),
-          onPressed: () {
-            Navigator.of(context).push(CupertinoPageRoute(
-              builder: (context) => notePage(context),
-            ));
-          },
-        )
-      ],
+    child: CupertinoButton(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        spacing: 10,
+        children: [
+          Icon(
+            CupertinoIcons.text_badge_plus,
+            size: 100,
+          ),
+          Text("Create a note")
+        ],
+      ),
+      onPressed: () {
+        Navigator.of(context).push(CupertinoPageRoute(
+          builder: (context) => notePage(context, newNote: true),
+        ));
+      },
     ),
   );
 }
