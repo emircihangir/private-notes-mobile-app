@@ -97,17 +97,8 @@ Widget welcomeView(BuildContext context) {
             child: Text("Proceed"),
             onPressed: () async {
               // create the notes file
-              Map<String, dynamic> notesFileData = {
-                "noteTitles": {},
-                "noteContents": {}
-              };
-
-              Map<String, dynamic> cfd = {
-                "totalNotes": 0
-              };
-
               await notesFile.writeAsString(json.encode(notesFileData));
-              await cookiesFile.writeAsString(json.encode(cfd));
+              await cookiesFile.writeAsString(json.encode(cookiesFileData));
 
               if (context.mounted) Navigator.of(context).pushNamed("/notesPage");
             })

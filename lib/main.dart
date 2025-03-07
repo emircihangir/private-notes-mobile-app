@@ -70,6 +70,15 @@ void main() async {
     final cookiesFileContent = await cookiesFile.readAsString();
     cookiesFileData = json.decode(cookiesFileContent);
     notesFileData = json.decode(await notesFile.readAsString());
+  } else {
+    notesFileData = {
+      "noteTitles": {},
+      "noteContents": {}
+    };
+
+    cookiesFileData = {
+      "totalNotes": 0
+    };
   }
 
   runApp(const PrivateNotesApp());
