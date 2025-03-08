@@ -72,100 +72,33 @@ Widget notePage(BuildContext context, {String? noteID}) {
     await cookiesFile.writeAsString(json.encode(cookiesFileData));
   }
 
-  void checkmarkPressed() async {
-    showCupertinoDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: const Text("Enter Password"),
-          content: Column(
-            children: [
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Consumer<EyeValueModel>(
-                      builder: (context, value, child) {
-                        return CupertinoTextField(
-                          placeholder: "Password",
-                          autofocus: true,
-                          obscureText: !(value.cmEyeIsOpen),
-                          controller: passwordIC,
-                        );
-                      },
-                    ),
-                  ),
-                  CupertinoButton(
-                    onPressed: () {
-                      Provider.of<EyeValueModel>(context, listen: false).toggleCMeye();
-                    },
-                    sizeStyle: CupertinoButtonSize.small,
-                    child: Consumer<EyeValueModel>(
-                      builder: (context, value, child) {
-                        return Icon(
-                          value.cmEyeIsOpen ? CupertinoIcons.eye_slash_fill : CupertinoIcons.eye_fill,
-                          size: 24,
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-          actions: [
-            CupertinoDialogAction(
-              child: const Text("Cancel"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            CupertinoDialogAction(
-              child: const Text("OK"),
-              onPressed: () async {
-                //TODO: validate the password
+  void saveNote() async {
+    //TODO: validate the password
 
-                // disable the ok button until something is typed?
+    // disable the ok button until something is typed?
 
-                if (noteID == null) {
-                  await createNewNote();
-                } else {
-                  var encryptedContent = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(passwordIC.text)).bytes)))).encrypt(contentTFcontroller.text, iv: encrypt.IV.allZerosOfLength(16)).base64;
+    if (noteID == null) {
+      await createNewNote();
+    } else {
+      var encryptedContent = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(passwordIC.text)).bytes)))).encrypt(contentTFcontroller.text, iv: encrypt.IV.allZerosOfLength(16)).base64;
 
-                  notesFileData["noteTitles"][noteID] = titleTFcontroller.text;
-                  notesFileData["noteContents"][noteID] = encryptedContent;
+      notesFileData["noteTitles"][noteID] = titleTFcontroller.text;
+      notesFileData["noteContents"][noteID] = encryptedContent;
 
-                  // reset the input values.
-                  passwordIC.text = "";
-                  if (Provider.of<EyeValueModel>(context, listen: false).cmEyeIsOpen) Provider.of<EyeValueModel>(context, listen: false).toggleCMeye();
+      // reset the input values.
+      passwordIC.text = "";
+      if (Provider.of<EyeValueModel>(context, listen: false).cmEyeIsOpen) Provider.of<EyeValueModel>(context, listen: false).toggleCMeye();
 
-                  Provider.of<NoteTitlesModel>(context, listen: false).updateValue(noteID, titleTFcontroller.text);
+      Provider.of<NoteTitlesModel>(context, listen: false).updateValue(noteID, titleTFcontroller.text);
 
-                  // write to file
-                  await notesFile.writeAsString(json.encode(notesFileData));
-                }
-                if (context.mounted) {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void unlockPressed(BuildContext context) {
-    try {
-      contentTFcontroller.text = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(piController.text)).bytes)))).decrypt64(notesFileData["noteContents"][noteID], iv: encrypt.IV.allZerosOfLength(16));
-    } on ArgumentError {
-      print("wrong apssword");
-      return;
+      // write to file
+      await notesFile.writeAsString(json.encode(notesFileData));
     }
-    Provider.of<IsLockedModel>(context, listen: false).isLocked = false;
+    if (context.mounted) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    }
   }
-
   return CupertinoPageScaffold(
     navigationBar: CupertinoNavigationBar(
       leading: Consumer<IsLockedModel>(
@@ -173,7 +106,63 @@ Widget notePage(BuildContext context, {String? noteID}) {
           return value.isLocked == false
               ? CupertinoButton(
                   sizeStyle: CupertinoButtonSize.small,
-                  onPressed: checkmarkPressed,
+                  onPressed: () {
+                    showCupertinoDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CupertinoAlertDialog(
+                          title: const Text("Enter Password"),
+                          content: Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Consumer<EyeValueModel>(
+                                      builder: (context, value, child) {
+                                        return CupertinoTextField(
+                                          placeholder: "Password",
+                                          autofocus: true,
+                                          obscureText: !(value.cmEyeIsOpen),
+                                          controller: passwordIC,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  CupertinoButton(
+                                    onPressed: () {
+                                      Provider.of<EyeValueModel>(context, listen: false).toggleCMeye();
+                                    },
+                                    sizeStyle: CupertinoButtonSize.small,
+                                    child: Consumer<EyeValueModel>(
+                                      builder: (context, value, child) {
+                                        return Icon(
+                                          value.cmEyeIsOpen ? CupertinoIcons.eye_slash_fill : CupertinoIcons.eye_fill,
+                                          size: 24,
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: const Text("Cancel"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            CupertinoDialogAction(
+                              onPressed: saveNote,
+                              child: const Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                   child: Icon(CupertinoIcons.checkmark, size: 24),
                 )
               : CupertinoButton(
