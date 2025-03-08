@@ -104,7 +104,18 @@ Widget notePage(BuildContext context, {String? noteID}) {
     try {
       contentTFcontroller.text = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(piController.text)).bytes)))).decrypt64(notesFileData["noteContents"][noteID], iv: encrypt.IV.allZerosOfLength(16));
     } on ArgumentError {
-      print("wrong apssword");
+      showCupertinoDialog(
+        context: navigatorKey.currentContext!,
+        builder: (context) => CupertinoAlertDialog(
+          title: const Text("Password is wrong"),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
       return;
     }
     Provider.of<IsLockedModel>(context, listen: false).isLocked = false;
