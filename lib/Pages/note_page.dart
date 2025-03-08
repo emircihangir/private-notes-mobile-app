@@ -99,6 +99,33 @@ Widget notePage(BuildContext context, {String? noteID}) {
       Navigator.pop(context);
     }
   }
+
+  void unlockPressed(BuildContext context) {
+    try {
+      contentTFcontroller.text = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(piController.text)).bytes)))).decrypt64(notesFileData["noteContents"][noteID], iv: encrypt.IV.allZerosOfLength(16));
+    } on ArgumentError {
+      print("wrong apssword");
+      return;
+    }
+    Provider.of<IsLockedModel>(context, listen: false).isLocked = false;
+  }
+
+  void deleteNote() async {
+    notesFileData["noteTitles"].remove(noteID);
+    notesFileData["noteContents"].remove(noteID);
+    cookiesFileData["totalNotes"] -= 1;
+    Provider.of<NoteTitlesModel>(context, listen: false).removeValue(noteID!);
+
+    // write to files
+    await notesFile.writeAsString(json.encode(notesFileData));
+    await cookiesFile.writeAsString(json.encode(cookiesFileData));
+
+    if (context.mounted) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    }
+  }
+
   return CupertinoPageScaffold(
     navigationBar: CupertinoNavigationBar(
       leading: Consumer<IsLockedModel>(
@@ -166,6 +193,7 @@ Widget notePage(BuildContext context, {String? noteID}) {
                   child: Icon(CupertinoIcons.checkmark, size: 24),
                 )
               : CupertinoButton(
+                  //TODO: erase the content tf text.
                   sizeStyle: CupertinoButtonSize.small,
                   onPressed: () => Navigator.of(context).pop(),
                   child: Icon(CupertinoIcons.back, size: 24),
@@ -196,7 +224,7 @@ Widget notePage(BuildContext context, {String? noteID}) {
                           ),
                           CupertinoDialogAction(
                             isDestructiveAction: true,
-                            onPressed: () {},
+                            onPressed: deleteNote,
                             child: const Text("Delete"),
                           ),
                         ],

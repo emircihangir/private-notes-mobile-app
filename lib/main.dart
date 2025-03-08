@@ -36,6 +36,11 @@ class NoteTitlesModel extends ChangeNotifier {
     _value[key] = newValue;
     notifyListeners();
   }
+
+  void removeValue(String key) {
+    _value.remove(key);
+    notifyListeners();
+  }
 }
 
 void main() async {
