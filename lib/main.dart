@@ -29,9 +29,9 @@ class DisclaimerCBVModel extends ChangeNotifier {
 }
 
 class NoteTitlesModel extends ChangeNotifier {
-  final Map<String, dynamic> _value;
-  NoteTitlesModel({required Map<String, dynamic> initialValue}) : _value = initialValue;
-  Map<String, dynamic> get value => _value;
+  final Map<dynamic, dynamic> _value;
+  NoteTitlesModel({required Map<dynamic, dynamic> initialValue}) : _value = initialValue;
+  Map<dynamic, dynamic> get value => _value;
   void updateValue(String key, dynamic newValue) {
     _value[key] = newValue;
     notifyListeners();

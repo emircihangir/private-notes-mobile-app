@@ -6,7 +6,7 @@ import 'package:privatenotes/main.dart';
 import 'package:provider/provider.dart';
 
 Widget notesPage(BuildContext context) {
-  List<Widget> retrieveNoteWidgets(Map<String, dynamic> data) {
+  List<Widget> retrieveNoteWidgets(Map<dynamic, dynamic> data) {
     List<Widget> result = [];
     data.forEach(
       (key, value) => result.add(CupertinoListTile(
