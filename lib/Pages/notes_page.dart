@@ -5,42 +5,42 @@ import 'package:privatenotes/Views/settings_modal.dart';
 import 'package:privatenotes/main.dart';
 import 'package:provider/provider.dart';
 
+List<Widget> retrieveNoteWidgets(Map<dynamic, dynamic> data, BuildContext context) {
+  List<Widget> result = [];
+  data.forEach(
+    (key, value) => result.add(CupertinoListTile(
+      title: Text(value),
+      onTap: () {
+        Navigator.of(context).push(CupertinoPageRoute(
+          builder: (context) => notePage(context, noteID: key),
+        ));
+      },
+    )),
+  );
+  return result;
+}
+
+Widget notesView() {
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        CupertinoListTile(title: CupertinoSearchTextField()),
+        Consumer<NoteTitlesModel>(
+          builder: (context, value, child) {
+            return CupertinoListSection(
+              topMargin: 0,
+              hasLeading: false,
+              backgroundColor: CupertinoColors.systemBackground,
+              children: retrieveNoteWidgets(value.value, context),
+            );
+          },
+        )
+      ],
+    ),
+  );
+}
+
 Widget notesPage(BuildContext context) {
-  List<Widget> retrieveNoteWidgets(Map<dynamic, dynamic> data) {
-    List<Widget> result = [];
-    data.forEach(
-      (key, value) => result.add(CupertinoListTile(
-        title: Text(value),
-        onTap: () {
-          Navigator.of(context).push(CupertinoPageRoute(
-            builder: (context) => notePage(context, noteID: key),
-          ));
-        },
-      )),
-    );
-    return result;
-  }
-
-  Widget notesView() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CupertinoListTile(title: CupertinoSearchTextField()),
-          Consumer<NoteTitlesModel>(
-            builder: (context, value, child) {
-              return CupertinoListSection(
-                topMargin: 0,
-                hasLeading: false,
-                backgroundColor: CupertinoColors.systemBackground,
-                children: retrieveNoteWidgets(value.value),
-              );
-            },
-          )
-        ],
-      ),
-    );
-  }
-
   return CupertinoPageScaffold(
     navigationBar: CupertinoNavigationBar(
       trailing: CupertinoButton(
@@ -64,7 +64,7 @@ Widget notesPage(BuildContext context) {
           onPressed: () {
             showCupertinoModalPopup(
               context: context,
-              builder: (context) => settingsModal(),
+              builder: (context) => settingsModal,
             );
           }),
     ),

@@ -104,7 +104,12 @@ Widget welcomeView(BuildContext context) {
               await notesFile.writeAsString(json.encode(notesFileData));
               await cookiesFile.writeAsString(json.encode(cookiesFileData));
 
-              if (context.mounted) Navigator.of(context).pushNamed("/notesPage");
+              if (context.mounted) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  "/notesPage",
+                  (route) => false,
+                );
+              }
             })
       ],
     );
