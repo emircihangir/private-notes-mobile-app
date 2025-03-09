@@ -58,15 +58,10 @@ Widget notesPage(BuildContext context) {
       leading: CupertinoButton(
           sizeStyle: CupertinoButtonSize.small,
           child: Icon(
-            CupertinoIcons.ellipsis_circle,
+            CupertinoIcons.settings,
             size: 24,
           ),
-          onPressed: () {
-            showCupertinoModalPopup(
-              context: context,
-              builder: (context) => settingsModal,
-            );
-          }),
+          onPressed: () => Navigator.of(context).pushNamed("/settingsPage")),
     ),
     child: Consumer<NoteTitlesModel>(
       builder: (context, value, child) {

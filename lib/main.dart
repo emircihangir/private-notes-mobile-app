@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:privatenotes/Pages/login_page.dart';
 import 'package:privatenotes/Pages/note_page.dart';
 import 'package:privatenotes/Pages/notes_page.dart';
+import 'package:privatenotes/Pages/settings_page.dart';
 import 'package:privatenotes/Views/welcome_view.dart';
 import 'package:provider/provider.dart';
 
@@ -72,7 +73,8 @@ void main() async {
     };
 
     cookiesFileData = {
-      "totalNotes": 0
+      "totalNotes": 0,
+      "autoExportEnabled": true
     };
   }
 
@@ -86,31 +88,19 @@ class PrivateNotesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => DisclaimerCBVModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => EyeValueModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => NoteTitlesModel(initialValue: notesFileData["noteTitles"] ?? {}),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => IsLockedModel(),
-        )
+        ChangeNotifierProvider(create: (context) => DisclaimerCBVModel()),
+        ChangeNotifierProvider(create: (context) => EyeValueModel()),
+        ChangeNotifierProvider(create: (context) => NoteTitlesModel(initialValue: notesFileData["noteTitles"] ?? {})),
+        ChangeNotifierProvider(create: (context) => IsLockedModel()),
+        ChangeNotifierProvider(create: (context) => AEswitchModel(initialValue: cookiesFileData["autoExportEnabled"])),
       ],
       builder: (context, child) {
         return CupertinoApp(
           routes: {
-            "/": (BuildContext context) {
-              if (firstTimeUser) {
-                return welcomeView(context);
-              } else {
-                return notesPage(context);
-              }
-            },
+            "/": (BuildContext context) => firstTimeUser ? welcomeView(context) : notesPage(context),
             "/loginPage": (BuildContext context) => loginPage(context),
             "/notesPage": (BuildContext context) => notesPage(context),
+            "/settingsPage": (BuildContext context) => settingsPage(context)
           },
           navigatorKey: navigatorKey,
           theme: CupertinoThemeData(textTheme: CupertinoTextThemeData(textStyle: TextStyle(fontFamily: "SFpro", color: CupertinoColors.black)), brightness: Brightness.light),
