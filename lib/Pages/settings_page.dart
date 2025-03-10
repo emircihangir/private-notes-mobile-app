@@ -1,6 +1,13 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
+import 'package:privatenotes/main.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 
 class AEswitchModel extends ChangeNotifier {
   bool _switchValue;
@@ -16,6 +23,49 @@ Future<void> _launchUrl(Uri url) async {
   if (!(await launchUrl(url))) {
     throw Exception('Could not launch $url');
   }
+}
+
+Future<void> exportNotes() async {
+  String formattedDate = DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now());
+  String mergedData = json.encode({
+    "notesFileData": notesFileData,
+    "cookiesFileData": cookiesFileData
+  });
+  var exportFileName = "private-notes-export-$formattedDate";
+
+  const MethodChannel mc = MethodChannel("com.example.save_to_downloads");
+  bool result = await mc.invokeMethod("saveToDownloads", {
+    "content": mergedData,
+    "fileName": exportFileName,
+    "mimeType": "application/json"
+  });
+
+  result
+      ? showCupertinoDialog(
+          context: navigatorKey.currentContext!,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text("Export Successful"),
+            content: const Text("The export file is in the Downloads folder."),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        )
+      : showCupertinoDialog(
+          context: navigatorKey.currentContext!,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text("Export Failed"),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
 }
 
 Widget settingsPage(BuildContext context) {
@@ -42,7 +92,7 @@ Widget settingsPage(BuildContext context) {
                     "Export Notes",
                     style: TextStyle(color: CupertinoColors.systemBlue),
                   ),
-                  onTap: () {},
+                  onTap: exportNotes,
                 ),
                 CupertinoListTile.notched(
                   title: const Text(
