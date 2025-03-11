@@ -33,9 +33,9 @@ class NoteTitlesModel extends ChangeNotifier {
   final Map<dynamic, dynamic> _value;
   NoteTitlesModel({required Map<dynamic, dynamic> initialValue}) : _value = initialValue;
   Map<dynamic, dynamic> get value => _value;
-  void updateValue(String key, dynamic newValue) {
+  void setValue(String key, dynamic newValue, {bool silent = false}) {
     _value[key] = newValue;
-    notifyListeners();
+    if (silent == false) notifyListeners();
   }
 
   void removeValue(String key) {

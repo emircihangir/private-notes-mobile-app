@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:privatenotes/main.dart';
@@ -65,6 +66,46 @@ Future<void> exportNotes() async {
 }
 
 Widget settingsPage(BuildContext context) {
+  Future<void> importNotes(Map<String, dynamic> importFileData) async {
+    //TODO: make sure the json file has the correct format.
+
+    int totalNotesImage = cookiesFileData["totalNotes"];
+    for (MapEntry entry in importFileData["noteTitles"].entries) {
+      String newNoteID = "note${totalNotesImage + 1}";
+      notesFileData["noteTitles"][newNoteID] = entry.value;
+      totalNotesImage += 1;
+      Provider.of<NoteTitlesModel>(context, listen: false).setValue(newNoteID, entry.value, silent: !(entry == importFileData["noteTitles"].entries.last));
+    }
+
+    totalNotesImage = cookiesFileData["totalNotes"];
+
+    for (MapEntry entry in importFileData["noteContents"].entries) {
+      String newNoteID = "note${totalNotesImage + 1}";
+      notesFileData["noteContents"][newNoteID] = entry.value;
+      totalNotesImage += 1;
+    }
+
+    cookiesFileData["totalNotes"] = totalNotesImage;
+
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      "/notesPage",
+      (route) => false,
+    );
+
+    await notesFile.writeAsString(json.encode(notesFileData));
+    await cookiesFile.writeAsString(json.encode(cookiesFileData));
+  }
+
+  Future<void> selectFile() async {
+    final XFile? file = await openFile(acceptedTypeGroups: [
+      XTypeGroup(label: "JSON", extensions: [
+        "json"
+      ])
+    ]);
+
+    if (file != null) await importNotes(json.decode(await file.readAsString()));
+  }
+
   return CupertinoPageScaffold(
     navigationBar: CupertinoNavigationBar(
       leading: CupertinoButton(
@@ -95,7 +136,7 @@ Widget settingsPage(BuildContext context) {
                     "Import Notes",
                     style: TextStyle(color: CupertinoColors.systemBlue),
                   ),
-                  onTap: () {},
+                  onTap: selectFile,
                 ),
                 CupertinoListTile.notched(
                   title: const Text("Auto-Export"),

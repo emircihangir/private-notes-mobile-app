@@ -65,9 +65,9 @@ Widget notePage(BuildContext context, {String? noteID}) {
     passwordIC.text = "";
     if (Provider.of<EyeValueModel>(context, listen: false).cmEyeIsOpen) Provider.of<EyeValueModel>(context, listen: false).toggleCMeye();
 
-    Provider.of<NoteTitlesModel>(context, listen: false).updateValue(newNoteID, titleTFcontroller.text);
+    Provider.of<NoteTitlesModel>(context, listen: false).setValue(newNoteID, titleTFcontroller.text);
 
-    // write to file
+    // write to files
     await notesFile.writeAsString(json.encode(notesFileData));
     await cookiesFile.writeAsString(json.encode(cookiesFileData));
   }
@@ -89,7 +89,7 @@ Widget notePage(BuildContext context, {String? noteID}) {
       passwordIC.text = "";
       if (Provider.of<EyeValueModel>(context, listen: false).cmEyeIsOpen) Provider.of<EyeValueModel>(context, listen: false).toggleCMeye();
 
-      Provider.of<NoteTitlesModel>(context, listen: false).updateValue(noteID, titleTFcontroller.text);
+      Provider.of<NoteTitlesModel>(context, listen: false).setValue(noteID, titleTFcontroller.text);
 
       // write to file
       await notesFile.writeAsString(json.encode(notesFileData));
