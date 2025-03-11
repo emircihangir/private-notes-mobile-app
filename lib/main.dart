@@ -56,8 +56,8 @@ void main() async {
 
   // determine if it's a first-time user and initialize the global variables.
   final directory = await getApplicationDocumentsDirectory();
-  final notesFilePath = "${directory.path}/notes";
-  final cookiesFilePath = "${directory.path}/cookies";
+  final notesFilePath = "${directory.path}/notes.json";
+  final cookiesFilePath = "${directory.path}/cookies.json";
   notesFile = File(notesFilePath);
   cookiesFile = File(cookiesFilePath);
   bool cookiesFileExists = await cookiesFile.exists();
