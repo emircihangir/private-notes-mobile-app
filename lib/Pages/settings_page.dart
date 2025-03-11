@@ -27,15 +27,11 @@ Future<void> _launchUrl(Uri url) async {
 
 Future<void> exportNotes() async {
   String formattedDate = DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now());
-  String mergedData = json.encode({
-    "notesFileData": notesFileData,
-    "cookiesFileData": cookiesFileData
-  });
   var exportFileName = "private-notes-export-$formattedDate";
 
   const MethodChannel mc = MethodChannel("com.example.save_to_downloads");
   bool result = await mc.invokeMethod("saveToDownloads", {
-    "content": mergedData,
+    "content": json.encode(notesFileData),
     "fileName": exportFileName,
     "mimeType": "application/json"
   });
