@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:privatenotes/Pages/settings_page.dart';
 import 'package:privatenotes/main.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:provider/provider.dart';
@@ -94,6 +95,7 @@ Widget notePage(BuildContext context, {String? noteID}) {
       // write to file
       await notesFile.writeAsString(json.encode(notesFileData));
     }
+    if (cookiesFileData["autoExportEnabled"]) await exportNotes(provideFeedback: false);
     if (context.mounted) {
       Navigator.pop(context);
       Navigator.pop(context);
@@ -130,6 +132,8 @@ Widget notePage(BuildContext context, {String? noteID}) {
     // write to files
     await notesFile.writeAsString(json.encode(notesFileData));
     await cookiesFile.writeAsString(json.encode(cookiesFileData));
+
+    if (cookiesFileData["autoExportEnabled"]) await exportNotes(provideFeedback: false);
 
     if (context.mounted) {
       Navigator.pop(context);

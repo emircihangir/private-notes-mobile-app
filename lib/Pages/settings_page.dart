@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,7 +24,7 @@ Future<void> _launchUrl(Uri url) async {
   }
 }
 
-Future<void> exportNotes() async {
+Future<void> exportNotes({bool provideFeedback = true}) async {
   String formattedDate = DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now());
   var exportFileName = "private-notes-export-$formattedDate";
 
@@ -37,32 +35,36 @@ Future<void> exportNotes() async {
     "mimeType": "application/json"
   });
 
-  result
-      ? showCupertinoDialog(
-          context: navigatorKey.currentContext!,
-          builder: (context) => CupertinoAlertDialog(
-            title: const Text("Export Successful"),
-            content: const Text("The export file is in the Downloads folder."),
-            actions: [
-              CupertinoDialogAction(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text("OK"),
-              ),
-            ],
+  if (provideFeedback == false) return;
+
+  if (result == true) {
+    showCupertinoDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text("Export Successful"),
+        content: const Text("The export file is in the Downloads folder."),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"),
           ),
-        )
-      : showCupertinoDialog(
-          context: navigatorKey.currentContext!,
-          builder: (context) => CupertinoAlertDialog(
-            title: const Text("Export Failed"),
-            actions: [
-              CupertinoDialogAction(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text("OK"),
-              ),
-            ],
+        ],
+      ),
+    );
+  } else {
+    showCupertinoDialog(
+      context: navigatorKey.currentContext!,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text("Export Failed"),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"),
           ),
-        );
+        ],
+      ),
+    );
+  }
 }
 
 Widget settingsPage(BuildContext context) {
@@ -144,9 +146,10 @@ Widget settingsPage(BuildContext context) {
                     builder: (context, value, child) {
                       return CupertinoSwitch(
                         value: value.switchValue,
-                        onChanged: (newValue) {
-                          //TODO: handle change event
+                        onChanged: (newValue) async {
                           Provider.of<AEswitchModel>(context, listen: false).switchValue = newValue;
+                          cookiesFileData["autoExportEnabled"] = newValue;
+                          await cookiesFile.writeAsString(json.encode(cookiesFileData));
                         },
                       );
                     },
