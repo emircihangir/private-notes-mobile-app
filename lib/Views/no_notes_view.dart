@@ -17,9 +17,13 @@ Widget noNotesView(BuildContext context) {
         ],
       ),
       onPressed: () {
-        Navigator.of(context).push(CupertinoPageRoute(
-          builder: (context) => notePage(context),
-        ));
+        // Navigator.of(context).push(CupertinoPageRoute(
+        //   builder: (context) => notePage(context),
+        // ));
+
+        Navigator.of(context).pushNamed("/notePage", arguments: {
+          "noteID": null
+        });
       },
     ),
   );

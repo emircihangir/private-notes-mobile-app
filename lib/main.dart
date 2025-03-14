@@ -100,6 +100,7 @@ class PrivateNotesApp extends StatelessWidget {
             "/": (BuildContext context) => firstTimeUser ? welcomeView(context) : notesPage(context),
             "/loginPage": (BuildContext context) => loginPage(context),
             "/notesPage": (BuildContext context) => notesPage(context),
+            "/notePage": (BuildContext context) => notePage(context),
             "/settingsPage": (BuildContext context) => settingsPage(context)
           },
           navigatorKey: navigatorKey,

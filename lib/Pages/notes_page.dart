@@ -10,9 +10,12 @@ List<Widget> retrieveNoteWidgets(Map<dynamic, dynamic> data, BuildContext contex
     (key, value) => result.add(CupertinoListTile(
       title: Text(value),
       onTap: () {
-        Navigator.of(context).push(CupertinoPageRoute(
-          builder: (context) => notePage(context, noteID: key),
-        ));
+        // Navigator.of(context).push(CupertinoPageRoute(
+        //   builder: (context) => notePage(context, noteID: key),
+        // ));
+        Navigator.of(context).pushNamed("/notePage", arguments: {
+          "noteID": key
+        });
       },
     )),
   );
@@ -49,9 +52,13 @@ Widget notesPage(BuildContext context) {
             size: 24,
           ),
           onPressed: () {
-            Navigator.of(context).push(CupertinoPageRoute(
-              builder: (context) => notePage(context),
-            ));
+            // Navigator.of(context).push(CupertinoPageRoute(
+            //   builder: (context) => notePage(context),
+            // ));
+
+            Navigator.of(context).pushNamed("/notePage", arguments: {
+              "noteID": null
+            });
           }),
       middle: Text("Notes"),
       leading: CupertinoButton(

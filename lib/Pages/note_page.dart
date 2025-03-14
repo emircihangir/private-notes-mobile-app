@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:privatenotes/Pages/settings_page.dart';
 import 'package:privatenotes/main.dart';
@@ -39,22 +40,33 @@ class IsLockedModel extends ChangeNotifier {
   void updateSilently(bool newValue) => _isLocked = newValue;
 }
 
-Widget notePage(BuildContext context, {String? noteID}) {
+Widget notePage(BuildContext context) {
+  final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+  String? noteID = args?["noteID"];
+
+  // SystemChannels.lifecycle.setMessageHandler((msg) async {
+  //   if (msg == "AppLifecycleState.inactive") {
+  //     print("popping the navigator");
+  //     // Navigator.of(context).pop();
+  //     SystemChannels.lifecycle.setMessageHandler((msg) async => null);
+  //   }
+
+  //   return null;
+  // });
+
   var piController = TextEditingController(); // pi = password input
   var piFocusNode = FocusNode();
   var titleTFcontroller = TextEditingController();
   var contentTFcontroller = TextEditingController();
   var passwordIC = TextEditingController(); // password input controller
   Provider.of<IsLockedModel>(context, listen: false).updateSilently(!(noteID == null));
+  print("silently updated the value to: ${!(noteID == null)}");
 
   if (noteID != null) {
     titleTFcontroller.text = notesFileData["noteTitles"][noteID];
   }
 
   Future<void> createNewNote() async {
-    //TODO: securely erase map and IC text variables.
-    //TODO: reset the input values after finishing.
-
     String newNoteID = "note${cookiesFileData["totalNotes"] + 1}";
     cookiesFileData["totalNotes"] += 1;
 
@@ -74,10 +86,12 @@ Widget notePage(BuildContext context, {String? noteID}) {
     // write to files
     await notesFile.writeAsString(json.encode(notesFileData));
     await cookiesFile.writeAsString(json.encode(cookiesFileData));
+
+    //TODO: securely erase map and IC text variables.
+    //TODO: reset the input values after finishing.
   }
 
   void saveNote() async {
-    // debugger();
     //TODO: validate the password
 
     // disable the ok button until something is typed?
@@ -156,61 +170,61 @@ Widget notePage(BuildContext context, {String? noteID}) {
               ? CupertinoButton(
                   sizeStyle: CupertinoButtonSize.small,
                   onPressed: () {
-                    showCupertinoDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CupertinoAlertDialog(
-                          title: const Text("Enter Password"),
-                          content: Column(
-                            children: [
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Consumer<EyeValueModel>(
-                                      builder: (context, value, child) {
-                                        return CupertinoTextField(
-                                          placeholder: "Password",
-                                          autofocus: true,
-                                          obscureText: !(value.cmEyeIsOpen),
-                                          controller: passwordIC,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  CupertinoButton(
-                                    onPressed: () {
-                                      Provider.of<EyeValueModel>(context, listen: false).toggleCMeye();
-                                    },
-                                    sizeStyle: CupertinoButtonSize.small,
-                                    child: Consumer<EyeValueModel>(
-                                      builder: (context, value, child) {
-                                        return Icon(
-                                          value.cmEyeIsOpen ? CupertinoIcons.eye_slash_fill : CupertinoIcons.eye_fill,
-                                          size: 24,
-                                        );
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            CupertinoDialogAction(
-                              child: const Text("Cancel"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            CupertinoDialogAction(
-                              onPressed: saveNote,
-                              child: const Text("OK"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    // showCupertinoDialog(
+                    //   context: context,
+                    //   builder: (BuildContext context) {
+                    //     return CupertinoAlertDialog(
+                    //       title: const Text("Enter Password"),
+                    //       content: Column(
+                    //         children: [
+                    //           const SizedBox(height: 10),
+                    //           Row(
+                    //             children: [
+                    //               Expanded(
+                    //                 child: Consumer<EyeValueModel>(
+                    //                   builder: (context, value, child) {
+                    //                     return CupertinoTextField(
+                    //                       placeholder: "Password",
+                    //                       autofocus: true,
+                    //                       obscureText: !(value.cmEyeIsOpen),
+                    //                       controller: passwordIC,
+                    //                     );
+                    //                   },
+                    //                 ),
+                    //               ),
+                    //               CupertinoButton(
+                    //                 onPressed: () {
+                    //                   Provider.of<EyeValueModel>(context, listen: false).toggleCMeye();
+                    //                 },
+                    //                 sizeStyle: CupertinoButtonSize.small,
+                    //                 child: Consumer<EyeValueModel>(
+                    //                   builder: (context, value, child) {
+                    //                     return Icon(
+                    //                       value.cmEyeIsOpen ? CupertinoIcons.eye_slash_fill : CupertinoIcons.eye_fill,
+                    //                       size: 24,
+                    //                     );
+                    //                   },
+                    //                 ),
+                    //               )
+                    //             ],
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       actions: [
+                    //         CupertinoDialogAction(
+                    //           child: const Text("Cancel"),
+                    //           onPressed: () {
+                    //             Navigator.pop(context);
+                    //           },
+                    //         ),
+                    //         CupertinoDialogAction(
+                    //           onPressed: saveNote,
+                    //           child: const Text("OK"),
+                    //         ),
+                    //       ],
+                    //     );
+                    //   },
+                    // );
                   },
                   child: Icon(CupertinoIcons.checkmark, size: 24),
                 )
@@ -275,6 +289,7 @@ Widget notePage(BuildContext context, {String? noteID}) {
           ),
           Consumer<IsLockedModel>(
             builder: (context, value, child) {
+              print("locked: ${value.isLocked}");
               return Expanded(
                 child: value.isLocked
                     ? Column(
