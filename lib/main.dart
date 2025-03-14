@@ -30,7 +30,8 @@ class DisclaimerCBVModel extends ChangeNotifier {
 }
 
 class NoteTitlesModel extends ChangeNotifier {
-  final Map<dynamic, dynamic> _value;
+  Map<dynamic, dynamic> _value;
+  bool isFiltered = false;
   NoteTitlesModel({required Map<dynamic, dynamic> initialValue}) : _value = initialValue;
   Map<dynamic, dynamic> get value => _value;
   void setValue(String key, dynamic newValue, {bool silent = false}) {
@@ -40,6 +41,16 @@ class NoteTitlesModel extends ChangeNotifier {
 
   void removeValue(String key) {
     _value.remove(key);
+    notifyListeners();
+  }
+
+  void filterTitles(String text) {
+    if (text.isNotEmpty) {
+      isFiltered = true;
+    } else {
+      isFiltered = false;
+    }
+    _value = Map.fromEntries(notesFileData["noteTitles"].entries.where((entry) => entry.value.toString().contains(text)));
     notifyListeners();
   }
 }

@@ -109,6 +109,7 @@ Widget notePage(BuildContext context) {
       await notesFile.writeAsString(json.encode(notesFileData));
     }
     if (cookiesFileData["autoExportEnabled"]) await exportNotes(provideFeedback: false);
+    titleTFcontroller.text = "";
     if (context.mounted) {
       Navigator.pop(context);
       Navigator.pop(context);

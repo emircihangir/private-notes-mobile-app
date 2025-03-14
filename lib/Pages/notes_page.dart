@@ -20,17 +20,25 @@ List<Widget> retrieveNoteWidgets(Map<dynamic, dynamic> data, BuildContext contex
   return result;
 }
 
-Widget notesView() {
+Widget notesView(BuildContext context) {
   return ListView(
     children: [
-      CupertinoListTile(title: CupertinoSearchTextField()),
+      CupertinoListTile(title: CupertinoSearchTextField(
+        onChanged: (value) {
+          Provider.of<NoteTitlesModel>(context, listen: false).filterTitles(value);
+        },
+      )),
       Consumer<NoteTitlesModel>(
         builder: (context, value, child) {
           return CupertinoListSection(
             topMargin: 0,
             hasLeading: false,
             backgroundColor: CupertinoColors.systemBackground,
-            children: retrieveNoteWidgets(value.value, context),
+            children: value.value.isNotEmpty
+                ? retrieveNoteWidgets(value.value, context)
+                : [
+                    SizedBox()
+                  ],
           );
         },
       )
@@ -65,7 +73,7 @@ Widget notesPage(BuildContext context) {
     child: Consumer<NoteTitlesModel>(
       builder: (context, value, child) {
         return SafeArea(
-          child: value.value.isNotEmpty ? notesView() : noNotesView(context),
+          child: (value.value.isNotEmpty || value.isFiltered) ? notesView(context) : noNotesView(context),
         );
       },
     ),
