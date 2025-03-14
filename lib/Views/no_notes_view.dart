@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:privatenotes/Pages/note_page.dart';
+import 'package:provider/provider.dart';
 
 Widget noNotesView(BuildContext context) {
   return Center(
@@ -17,10 +18,7 @@ Widget noNotesView(BuildContext context) {
         ],
       ),
       onPressed: () {
-        // Navigator.of(context).push(CupertinoPageRoute(
-        //   builder: (context) => notePage(context),
-        // ));
-
+        Provider.of<IsLockedModel>(context, listen: false).updateSilently(false);
         Navigator.of(context).pushNamed("/notePage", arguments: {
           "noteID": null
         });

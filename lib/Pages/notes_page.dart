@@ -10,9 +10,7 @@ List<Widget> retrieveNoteWidgets(Map<dynamic, dynamic> data, BuildContext contex
     (key, value) => result.add(CupertinoListTile(
       title: Text(value),
       onTap: () {
-        // Navigator.of(context).push(CupertinoPageRoute(
-        //   builder: (context) => notePage(context, noteID: key),
-        // ));
+        Provider.of<IsLockedModel>(context, listen: false).updateSilently(true);
         Navigator.of(context).pushNamed("/notePage", arguments: {
           "noteID": key
         });
@@ -23,22 +21,20 @@ List<Widget> retrieveNoteWidgets(Map<dynamic, dynamic> data, BuildContext contex
 }
 
 Widget notesView() {
-  return SingleChildScrollView(
-    child: Column(
-      children: [
-        CupertinoListTile(title: CupertinoSearchTextField()),
-        Consumer<NoteTitlesModel>(
-          builder: (context, value, child) {
-            return CupertinoListSection(
-              topMargin: 0,
-              hasLeading: false,
-              backgroundColor: CupertinoColors.systemBackground,
-              children: retrieveNoteWidgets(value.value, context),
-            );
-          },
-        )
-      ],
-    ),
+  return ListView(
+    children: [
+      CupertinoListTile(title: CupertinoSearchTextField()),
+      Consumer<NoteTitlesModel>(
+        builder: (context, value, child) {
+          return CupertinoListSection(
+            topMargin: 0,
+            hasLeading: false,
+            backgroundColor: CupertinoColors.systemBackground,
+            children: retrieveNoteWidgets(value.value, context),
+          );
+        },
+      )
+    ],
   );
 }
 
@@ -52,10 +48,7 @@ Widget notesPage(BuildContext context) {
             size: 24,
           ),
           onPressed: () {
-            // Navigator.of(context).push(CupertinoPageRoute(
-            //   builder: (context) => notePage(context),
-            // ));
-
+            Provider.of<IsLockedModel>(context, listen: false).updateSilently(false);
             Navigator.of(context).pushNamed("/notePage", arguments: {
               "noteID": null
             });
