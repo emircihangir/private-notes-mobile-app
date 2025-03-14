@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
@@ -122,7 +121,7 @@ Widget settingsPage(BuildContext context) {
     ]);
 
     if (file != null) {
-      var _jsonDecoded;
+      dynamic _jsonDecoded;
       try {
         _jsonDecoded = json.decode(await file.readAsString());
       } catch (e) {
@@ -228,8 +227,8 @@ Widget settingsPage(BuildContext context) {
               hasLeading: false,
               children: [
                 CupertinoListTile.notched(
-                  title: Text("Release Date"),
-                  //TODO: Write the date
+                  title: Text("Last Updated"),
+                  //TODO frontend: Write the date
                   trailing: Text("..."),
                 ),
                 CupertinoListTile.notched(

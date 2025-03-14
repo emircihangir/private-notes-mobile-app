@@ -104,9 +104,7 @@ class PrivateNotesApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NoteTitlesModel(initialValue: notesFileData["noteTitles"] ?? {})),
         ChangeNotifierProvider(create: (context) => IsLockedModel()),
         ChangeNotifierProvider(create: (context) => AEswitchModel(initialValue: cookiesFileData["autoExportEnabled"])),
-        ChangeNotifierProvider(
-          create: (context) => ButtonEnabledModel(),
-        )
+        ChangeNotifierProvider(create: (context) => ButtonEnabledModel())
       ],
       builder: (context, child) {
         return CupertinoApp(
