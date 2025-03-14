@@ -252,11 +252,6 @@ Widget settingsPage(BuildContext context) {
                   ),
                   onTap: () => _launchUrl(Uri.parse("https://github.com/emircihangir/private-notes-mobile-app")),
                 ),
-                CupertinoListTile.notched(
-                  title: Text("FAQ"),
-                  trailing: CupertinoListTileChevron(),
-                  onTap: () {},
-                ),
               ],
             )
           ],
