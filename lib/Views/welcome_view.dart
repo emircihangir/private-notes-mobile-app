@@ -121,6 +121,7 @@ Widget welcomeView(BuildContext context) {
         padding: const EdgeInsets.all(16.0),
         child: PageView(
           physics: NeverScrollableScrollPhysics(),
+          scrollBehavior: CupertinoScrollBehavior(),
           controller: pageController,
           children: [
             slide1(),
