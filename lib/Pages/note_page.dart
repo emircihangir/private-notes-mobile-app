@@ -97,16 +97,9 @@ Widget notePage(BuildContext context) {
     // write to files
     await notesFile.writeAsString(json.encode(notesFileData));
     await cookiesFile.writeAsString(json.encode(cookiesFileData));
-
-    //TODO: securely erase map and IC text variables.
-    //TODO: reset the input values after finishing.
   }
 
   void saveNote() async {
-    //TODO: validate the password
-
-    // disable the ok button until something is typed?
-
     if (noteID == null) {
       await createNewNote();
     } else {
@@ -117,8 +110,6 @@ Widget notePage(BuildContext context) {
 
       notesFileData["noteTitles"][noteID] = titleTFcontroller.text;
 
-      // reset the input values.
-      passwordIC.text = "";
       if (Provider.of<EyeValueModel>(context, listen: false).cmEyeIsOpen) Provider.of<EyeValueModel>(context, listen: false).toggleCMeye();
 
       Provider.of<NoteTitlesModel>(context, listen: false).setValue(noteID, titleTFcontroller.text);
@@ -127,7 +118,13 @@ Widget notePage(BuildContext context) {
       await notesFile.writeAsString(json.encode(notesFileData));
     }
     if (cookiesFileData["autoExportEnabled"]) await exportNotes(provideFeedback: false);
+
+    // reset the input values.
+    passwordIC.text = "";
     titleTFcontroller.text = "";
+    piController.text = "";
+    contentTFcontroller.text = "";
+
     if (context.mounted) {
       Navigator.pop(context);
       Navigator.pop(context);
@@ -147,7 +144,14 @@ Widget notePage(BuildContext context) {
           title: const Text("Password is wrong"),
           actions: [
             CupertinoDialogAction(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                // reset the input values.
+                passwordIC.text = "";
+                titleTFcontroller.text = "";
+                piController.text = "";
+                contentTFcontroller.text = "";
+                Navigator.of(context).pop();
+              },
               child: const Text("OK"),
             ),
           ],
@@ -170,6 +174,11 @@ Widget notePage(BuildContext context) {
 
     if (cookiesFileData["autoExportEnabled"]) await exportNotes(provideFeedback: false);
 
+    // reset the input values.
+    passwordIC.text = "";
+    titleTFcontroller.text = "";
+    piController.text = "";
+    contentTFcontroller.text = "";
     if (context.mounted) {
       Navigator.pop(context);
       Navigator.pop(context);
@@ -248,9 +257,15 @@ Widget notePage(BuildContext context) {
                   child: Icon(CupertinoIcons.checkmark, size: 24),
                 )
               : CupertinoButton(
-                  //TODO: erase the content tf text.
                   sizeStyle: CupertinoButtonSize.small,
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    // reset the input values.
+                    passwordIC.text = "";
+                    titleTFcontroller.text = "";
+                    piController.text = "";
+                    contentTFcontroller.text = "";
+                    Navigator.of(context).pop();
+                  },
                   child: Icon(CupertinoIcons.back, size: 24),
                 );
         },
