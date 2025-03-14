@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,7 +70,22 @@ Future<void> exportNotes({bool provideFeedback = true}) async {
 
 Widget settingsPage(BuildContext context) {
   Future<void> importNotes(Map<String, dynamic> importFileData) async {
-    //TODO: make sure the json file has the correct format.
+    if (importFileData["noteTitles"] == null || importFileData["noteContents"]) {
+      showCupertinoDialog(
+        context: navigatorKey.currentContext!,
+        builder: (context) => CupertinoAlertDialog(
+          title: const Text("Import failed"),
+          content: const Text("The selected file has the wrong format. See the documentation for more info."),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
 
     int totalNotesImage = cookiesFileData["totalNotes"];
     for (MapEntry entry in importFileData["noteTitles"].entries) {
@@ -105,7 +121,29 @@ Widget settingsPage(BuildContext context) {
       ])
     ]);
 
-    if (file != null) await importNotes(json.decode(await file.readAsString()));
+    if (file != null) {
+      var _jsonDecoded;
+      try {
+        _jsonDecoded = json.decode(await file.readAsString());
+      } catch (e) {
+        showCupertinoDialog(
+          context: navigatorKey.currentContext!,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text("Import failed"),
+            content: const Text("The selected file is corrupt. See the documentation for more info."),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+
+      await importNotes(_jsonDecoded);
+    }
   }
 
   return CupertinoPageScaffold(
