@@ -50,15 +50,14 @@ Widget notePage(BuildContext context) {
   if (noteID != null) {
     titleTFcontroller.text = notesFileData["noteTitles"][noteID];
   }
-  // SystemChannels.lifecycle.setMessageHandler((msg) async {
-  //   if (msg == "AppLifecycleState.inactive") {
-  //     print("popping the navigator");
-  //     // Navigator.of(context).pop();
-  //     SystemChannels.lifecycle.setMessageHandler((msg) async => null);
-  //   }
 
-  //   return null;
-  // });
+  SystemChannels.lifecycle.setMessageHandler((msg) async {
+    if (msg == "AppLifecycleState.inactive" && context.mounted) {
+      contentTFcontroller.text = "";
+      Provider.of<IsLockedModel>(context, listen: false).isLocked = true;
+    }
+    return null;
+  });
 
   Future<void> createNewNote() async {
     String newNoteID = "note${cookiesFileData["totalNotes"] + 1}";
