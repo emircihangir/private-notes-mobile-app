@@ -8,6 +8,24 @@ import 'package:privatenotes/main.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:provider/provider.dart';
 
+class ButtonEnabledModel extends ChangeNotifier {
+  bool _unlockEnabled = false;
+  bool get unlockEnabled => _unlockEnabled;
+  set unlockEnabled(bool value) {
+    _unlockEnabled = value;
+    notifyListeners();
+  }
+
+  bool _okEnabled = false;
+  bool get okEnabled => _okEnabled;
+  set okEnabled(bool value) {
+    _okEnabled = value;
+    notifyListeners();
+  }
+
+  void resetSilently() => _unlockEnabled = _okEnabled = false;
+}
+
 class EyeValueModel extends ChangeNotifier {
   bool _cmEyeIsOpen = false; // the eye value of the eye value of the password input that open after pressing checkmark
   bool get cmEyeIsOpen => _cmEyeIsOpen;
@@ -121,6 +139,7 @@ Widget notePage(BuildContext context) {
       contentTFcontroller.text = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(piController.text)).bytes)))).decrypt64(notesFileData["noteContents"][noteID], iv: encrypt.IV.allZerosOfLength(16));
       if (contentTFcontroller.text == " ") contentTFcontroller.text = "";
       piController.text = "";
+      // Provider.of<ButtonEnabledModel>(context).unlockEnabled = false;
     } on ArgumentError {
       showCupertinoDialog(
         context: navigatorKey.currentContext!,
@@ -157,6 +176,8 @@ Widget notePage(BuildContext context) {
     }
   }
 
+  Provider.of<ButtonEnabledModel>(context, listen: false).resetSilently();
+
   return CupertinoPageScaffold(
     navigationBar: CupertinoNavigationBar(
       leading: Consumer<IsLockedModel>(
@@ -183,6 +204,7 @@ Widget notePage(BuildContext context) {
                                           autofocus: true,
                                           obscureText: !(value.cmEyeIsOpen),
                                           controller: passwordIC,
+                                          onChanged: (value) => Provider.of<ButtonEnabledModel>(context, listen: false).okEnabled = (value.isNotEmpty),
                                         );
                                       },
                                     ),
@@ -212,9 +234,11 @@ Widget notePage(BuildContext context) {
                                 Navigator.pop(context);
                               },
                             ),
-                            CupertinoDialogAction(
-                              onPressed: saveNote,
-                              child: const Text("OK"),
+                            Consumer<ButtonEnabledModel>(
+                              builder: (context, value, child) => CupertinoDialogAction(
+                                onPressed: value.okEnabled ? saveNote : null,
+                                child: const Text("OK"),
+                              ),
                             ),
                           ],
                         );
@@ -320,6 +344,7 @@ Widget notePage(BuildContext context) {
                                       controller: piController,
                                       obscureText: !value.uEyeIsOpen,
                                       autofocus: true,
+                                      onChanged: (value) => Provider.of<ButtonEnabledModel>(context, listen: false).unlockEnabled = (value.isNotEmpty),
                                     );
                                   },
                                 ),
@@ -340,7 +365,9 @@ Widget notePage(BuildContext context) {
                               )
                             ],
                           ),
-                          CupertinoButton(onPressed: () => unlockPressed(context), child: Text("Unlock"))
+                          Consumer<ButtonEnabledModel>(
+                            builder: (context, value, child) => CupertinoButton(onPressed: (value.unlockEnabled) ? () => unlockPressed(context) : null, child: Text("Unlock")),
+                          )
                         ],
                       )
                     : CupertinoListTile(
