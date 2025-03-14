@@ -42,7 +42,10 @@ Future<void> exportNotes({bool provideFeedback = true}) async {
       context: navigatorKey.currentContext!,
       builder: (context) => CupertinoAlertDialog(
         title: const Text("Export Successful"),
-        content: const Text("The export file is in the Downloads folder."),
+        content: Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: const Text("The export file is in the Downloads folder."),
+        ),
         actions: [
           CupertinoDialogAction(
             onPressed: () => Navigator.of(context).pop(),
@@ -73,8 +76,11 @@ Widget settingsPage(BuildContext context) {
       showCupertinoDialog(
         context: navigatorKey.currentContext!,
         builder: (context) => CupertinoAlertDialog(
-          title: const Text("Import failed"),
-          content: const Text("The selected file has the wrong format. See the documentation for more info."),
+          title: const Text("Import Failed"),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: const Text("The selected file has the wrong format. See the documentation for more info."),
+          ),
           actions: [
             CupertinoDialogAction(
               onPressed: () => Navigator.of(context).pop(),
@@ -128,8 +134,11 @@ Widget settingsPage(BuildContext context) {
         showCupertinoDialog(
           context: navigatorKey.currentContext!,
           builder: (context) => CupertinoAlertDialog(
-            title: const Text("Import failed"),
-            content: const Text("The selected file is corrupt. See the documentation for more info."),
+            title: const Text("Import Failed"),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: const Text("The selected file is corrupt. See the documentation for more info."),
+            ),
             actions: [
               CupertinoDialogAction(
                 onPressed: () => Navigator.of(context).pop(),

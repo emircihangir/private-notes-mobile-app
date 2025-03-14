@@ -73,6 +73,7 @@ Widget notePage(BuildContext context) {
     if (msg == "AppLifecycleState.inactive" && context.mounted) {
       contentTFcontroller.text = "";
       Provider.of<IsLockedModel>(context, listen: false).isLocked = true;
+      Provider.of<ButtonEnabledModel>(context, listen: false).resetSilently();
     }
     return null;
   });
@@ -203,6 +204,8 @@ Widget notePage(BuildContext context) {
                           content: Column(
                             children: [
                               const SizedBox(height: 10),
+                              const Text("Enter the password to lock this note with."),
+                              const SizedBox(height: 10),
                               Row(
                                 children: [
                                   Expanded(
@@ -286,7 +289,10 @@ Widget notePage(BuildContext context) {
                       context: navigatorKey.currentContext!,
                       builder: (context) => CupertinoAlertDialog(
                         title: const Text("Are you sure?"),
-                        content: const Text("This action is irreversible."),
+                        content: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: const Text("This action is irreversible."),
+                        ),
                         actions: [
                           CupertinoDialogAction(
                             child: const Text("Cancel"),
