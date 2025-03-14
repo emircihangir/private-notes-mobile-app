@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
@@ -57,10 +58,12 @@ Widget notePage(BuildContext context, {String? noteID}) {
     String newNoteID = "note${cookiesFileData["totalNotes"] + 1}";
     cookiesFileData["totalNotes"] += 1;
 
+    if (contentTFcontroller.text.isEmpty) contentTFcontroller.text = " ";
+
     var encryptedContent = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(passwordIC.text)).bytes)))).encrypt(contentTFcontroller.text, iv: encrypt.IV.allZerosOfLength(16)).base64;
+    notesFileData["noteContents"][newNoteID] = encryptedContent;
 
     notesFileData["noteTitles"][newNoteID] = titleTFcontroller.text;
-    notesFileData["noteContents"][newNoteID] = encryptedContent;
 
     // reset the input values.
     passwordIC.text = "";
@@ -74,6 +77,7 @@ Widget notePage(BuildContext context, {String? noteID}) {
   }
 
   void saveNote() async {
+    // debugger();
     //TODO: validate the password
 
     // disable the ok button until something is typed?
@@ -81,10 +85,12 @@ Widget notePage(BuildContext context, {String? noteID}) {
     if (noteID == null) {
       await createNewNote();
     } else {
+      if (contentTFcontroller.text.isEmpty) contentTFcontroller.text = " ";
+
       var encryptedContent = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(passwordIC.text)).bytes)))).encrypt(contentTFcontroller.text, iv: encrypt.IV.allZerosOfLength(16)).base64;
+      notesFileData["noteContents"][noteID] = encryptedContent;
 
       notesFileData["noteTitles"][noteID] = titleTFcontroller.text;
-      notesFileData["noteContents"][noteID] = encryptedContent;
 
       // reset the input values.
       passwordIC.text = "";
@@ -105,6 +111,7 @@ Widget notePage(BuildContext context, {String? noteID}) {
   void unlockPressed(BuildContext context) {
     try {
       contentTFcontroller.text = encrypt.Encrypter(encrypt.AES(encrypt.Key(Uint8List.fromList(sha256.convert(utf8.encode(piController.text)).bytes)))).decrypt64(notesFileData["noteContents"][noteID], iv: encrypt.IV.allZerosOfLength(16));
+      if (contentTFcontroller.text == " ") contentTFcontroller.text = "";
     } on ArgumentError {
       showCupertinoDialog(
         context: navigatorKey.currentContext!,
