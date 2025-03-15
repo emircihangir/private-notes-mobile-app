@@ -44,30 +44,28 @@ Widget welcomeView(BuildContext context) {
           "Disclaimer",
           style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
         ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
+        const SizedBox(height: 10),
+        const Text(
           disclaimerText,
           textAlign: TextAlign.justify,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Consumer<DisclaimerCBVModel>(
               builder: (context, cbValue, child) {
                 return CupertinoCheckbox(
                   value: cbValue.value,
                   onChanged: (value) => Provider.of<DisclaimerCBVModel>(context, listen: false).value = value,
-                  semanticLabel: "I have read and understand the terms.",
+                  semanticLabel: "I have read and understood the terms.",
                 );
               },
             ),
-            Text(
-              "I have read and understand the terms.",
-            )
+            const Text("I have read and understand the terms.")
           ],
         ),
+        const SizedBox(height: 10),
         Consumer<DisclaimerCBVModel>(
           builder: (context, value, child) {
             return CupertinoButton(
@@ -120,8 +118,8 @@ Widget welcomeView(BuildContext context) {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: PageView(
-          physics: NeverScrollableScrollPhysics(),
-          scrollBehavior: CupertinoScrollBehavior(),
+          physics: const NeverScrollableScrollPhysics(),
+          scrollBehavior: const CupertinoScrollBehavior(),
           controller: pageController,
           children: [
             slide1(),
