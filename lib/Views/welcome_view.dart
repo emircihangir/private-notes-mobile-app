@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:privatenotes/Pages/notes_page.dart';
 import 'package:privatenotes/disclaimer.dart';
 import 'package:privatenotes/how_to_text.dart';
 import 'package:privatenotes/main.dart';
@@ -10,27 +11,38 @@ import 'package:provider/provider.dart';
 Widget welcomeView(BuildContext context) {
   var pageController = PageController(initialPage: 0);
 
-  Widget slide1() {
+  Widget slide3() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SvgPicture.asset(
-          "assets/private-notes-icon.svg",
-          width: 150,
-        ),
-        const SizedBox(
-          height: 30,
-        ),
         Text(
-          "Welcome to Private Notes.",
+          "How to use the app",
           style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
         ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          howToText,
+          textAlign: TextAlign.justify,
+        ),
         CupertinoButton(
-          child: Text(
-            "Let's get started ",
-            style: CupertinoTheme.of(context).textTheme.actionSmallTextStyle,
-          ),
-          onPressed: () => pageController.nextPage(duration: Durations.long1, curve: Curves.ease),
+            child: Text("Proceed"),
+            onPressed: () async {
+              // create the notes file
+              await notesFile.writeAsString(json.encode(notesFileData));
+              await cookiesFile.writeAsString(json.encode(cookiesFileData));
+
+              if (context.mounted) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  "/notesPage",
+                  (route) => false,
+                );
+              }
+            }),
+        Offstage(
+          offstage: true,
+          child: notesPage(context),
         )
       ],
     );
@@ -75,40 +87,38 @@ Widget welcomeView(BuildContext context) {
               child: const Text("Continue"),
             );
           },
+        ),
+        Offstage(
+          offstage: true,
+          child: slide3(),
         )
       ],
     );
   }
 
-  Widget slide3() {
+  Widget slide1() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        SvgPicture.asset(
+          "assets/private-notes-icon.svg",
+          width: 150,
+        ),
+        const SizedBox(
+          height: 30,
+        ),
         Text(
-          "How to use the app",
+          "Welcome to Private Notes.",
           style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
         ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          howToText,
-          textAlign: TextAlign.justify,
-        ),
         CupertinoButton(
-            child: Text("Proceed"),
-            onPressed: () async {
-              // create the notes file
-              await notesFile.writeAsString(json.encode(notesFileData));
-              await cookiesFile.writeAsString(json.encode(cookiesFileData));
-
-              if (context.mounted) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  "/notesPage",
-                  (route) => false,
-                );
-              }
-            })
+          child: Text(
+            "Let's get started ",
+            style: CupertinoTheme.of(context).textTheme.actionSmallTextStyle,
+          ),
+          onPressed: () => pageController.nextPage(duration: Durations.long1, curve: Curves.ease),
+        ),
+        Offstage(offstage: true, child: slide2()),
       ],
     );
   }
