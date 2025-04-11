@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:privatenotes/Pages/note_page.dart';
+import 'package:privatenotes/Pages/settings_page.dart';
 import 'package:privatenotes/Views/no_notes_view.dart';
 import 'package:privatenotes/main.dart';
 import 'package:provider/provider.dart';
@@ -70,12 +71,20 @@ Widget notesPage(BuildContext context) {
           ),
           onPressed: () => Navigator.of(context).pushNamed("/settingsPage")),
     ),
-    child: Consumer<NoteTitlesModel>(
-      builder: (context, value, child) {
-        return SafeArea(
-          child: (value.value.isNotEmpty || value.isFiltered) ? notesView(context) : noNotesView(context),
-        );
-      },
+    child: Stack(
+      children: [
+        Consumer<NoteTitlesModel>(
+          builder: (context, value, child) {
+            return SafeArea(
+              child: (value.value.isNotEmpty || value.isFiltered) ? notesView(context) : noNotesView(context),
+            );
+          },
+        ),
+        Offstage(
+          offstage: true,
+          child: settingsPage(context),
+        )
+      ],
     ),
   );
 }
