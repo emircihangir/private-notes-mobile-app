@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +28,7 @@ class ButtonEnabledModel extends ChangeNotifier {
 }
 
 class EyeValueModel extends ChangeNotifier {
-  bool _cmEyeIsOpen = false; // the eye value of the eye value of the password input that open after pressing checkmark
+  bool _cmEyeIsOpen = false; // the eye value of password input that opens after pressing checkmark
   bool get cmEyeIsOpen => _cmEyeIsOpen;
   set cmEyeIsOpen(bool value) {
     _cmEyeIsOpen = value;
@@ -196,6 +197,7 @@ Widget notePage(BuildContext context) {
               ? CupertinoButton(
                   sizeStyle: CupertinoButtonSize.small,
                   onPressed: () {
+                    debugger();
                     showCupertinoDialog(
                       context: context,
                       builder: (BuildContext context) {
