@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:privatenotes/Pages/note_page.dart';
-import 'package:privatenotes/Pages/settings_page.dart';
 import 'package:privatenotes/Views/no_notes_view.dart';
 import 'package:privatenotes/main.dart';
 import 'package:provider/provider.dart';

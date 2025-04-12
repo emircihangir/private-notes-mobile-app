@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:privatenotes/Pages/notes_page.dart';
 import 'package:privatenotes/disclaimer.dart';
 import 'package:privatenotes/how_to_text.dart';
 import 'package:privatenotes/main.dart';

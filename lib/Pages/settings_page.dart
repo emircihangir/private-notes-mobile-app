@@ -237,8 +237,7 @@ Widget settingsPage(BuildContext context) {
               children: [
                 CupertinoListTile.notched(
                   title: Text("Last Updated"),
-                  //TODO frontend: Write the date
-                  trailing: Text("..."),
+                  trailing: Text("April 2025"),
                 ),
                 CupertinoListTile.notched(
                   title: Text("Version"),
