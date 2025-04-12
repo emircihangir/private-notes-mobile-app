@@ -147,11 +147,6 @@ Widget notePage(BuildContext context) {
           actions: [
             CupertinoDialogAction(
               onPressed: () {
-                // reset the input values.
-                passwordIC.text = "";
-                titleTFcontroller.text = "";
-                piController.text = "";
-                contentTFcontroller.text = "";
                 Navigator.of(context).pop();
               },
               child: const Text("OK"),
@@ -197,7 +192,7 @@ Widget notePage(BuildContext context) {
               ? CupertinoButton(
                   sizeStyle: CupertinoButtonSize.small,
                   onPressed: () {
-                    debugger();
+                    // debugger();
                     showCupertinoDialog(
                       context: context,
                       builder: (BuildContext context) {
