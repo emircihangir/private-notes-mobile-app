@@ -79,10 +79,6 @@ Widget notesPage(BuildContext context) {
               child: (value.value.isNotEmpty || value.isFiltered) ? notesView(context) : noNotesView(context),
             );
           },
-        ),
-        Offstage(
-          offstage: true,
-          child: settingsPage(context),
         )
       ],
     ),

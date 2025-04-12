@@ -39,11 +39,7 @@ Widget welcomeView(BuildContext context) {
                   (route) => false,
                 );
               }
-            }),
-        Offstage(
-          offstage: true,
-          child: notesPage(context),
-        )
+            })
       ],
     );
   }
@@ -87,10 +83,6 @@ Widget welcomeView(BuildContext context) {
               child: const Text("Continue"),
             );
           },
-        ),
-        Offstage(
-          offstage: true,
-          child: slide3(),
         )
       ],
     );
@@ -118,7 +110,6 @@ Widget welcomeView(BuildContext context) {
           ),
           onPressed: () => pageController.nextPage(duration: Durations.long1, curve: Curves.ease),
         ),
-        Offstage(offstage: true, child: slide2()),
       ],
     );
   }
